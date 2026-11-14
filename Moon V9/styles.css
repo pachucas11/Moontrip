@@ -1,0 +1,3931 @@
+
+/* =========================================================================
+   CANVAS DOM DE RESOLUCIÓN FIJA 1600x900 (SIN REFLOW)
+   ========================================================================= */
+#game-viewport-scaler {
+  width: 1600px !important;
+  height: 900px !important;
+  min-width: 1600px !important;
+  min-height: 900px !important;
+  max-width: 1600px !important;
+  max-height: 900px !important;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  transform-origin: center center;
+}
+
+#draggable-manual,
+#manual-book-trigger {
+  width: 165px !important;
+  height: 290px !important;
+}
+
+#draggable-dossier {
+  width: 320px !important;
+  height: 340px !important;
+}
+
+#draggable-crate {
+  width: 310px !important;
+  height: 310px !important;
+}
+
+#draggable-scanner {
+  background: transparent !important;
+  width: 320px !important;
+  height: 295px !important;
+}
+
+#scanner-lens {
+  flex: 1;
+  width: 100%;
+  min-height: 215px;
+  position: relative;
+  background: rgba(6, 182, 212, 0.08) !important;
+  box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.25) !important;
+}
+
+#stamp-approve,
+#stamp-authorize,
+#stamp-deny {
+  position: absolute !important;
+  z-index: 60 !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  width: 270px !important;
+  height: 86px !important;
+}
+
+/* =========================================================================
+   OFICIAL DE ESCLUSA — REVISIÓN #5
+   GUNMETAL / CROMO, AVATARES VIVOS, TYPEWRITER Y ONDA DE VOZ REACTIVA
+   ========================================================================= */
+
+/* =========================================================================
+   0. SISTEMA TIPOGRÁFICO PROFESIONAL: REDACTION 35 (EFECTO PIXEL)
+   ========================================================================= */
+
+@font-face {
+  font-family: 'Redaction 35';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://fonts.cdnfonts.com/s/47238/Redaction35-BWXjw.woff') format('woff'),
+       url('https://cdn.jsdelivr.net/gh/jeremymickel/Redaction@main/fonts/webfonts/Redaction35-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Redaction 35';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://fonts.cdnfonts.com/s/47238/Redaction35Bold-MV3LP.woff') format('woff'),
+       url('https://cdn.jsdelivr.net/gh/jeremymickel/Redaction@main/fonts/webfonts/Redaction35-Bold.woff2') format('woff2');
+}
+
+/* BASE GLOBAL DE LECTURA RETRO-TECH ESPACIAL: 'Share Tech Mono' */
+body {
+  font-family: 'Share Tech Mono', monospace;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.font-reading,
+.font-sans,
+.font-mono,
+.font-telemetry,
+.font-numeric,
+p,
+button,
+.btn,
+#visitor-dialogue,
+.visitor-dialogue,
+#tut-desc,
+.contract-card p,
+.dossier-cargo-desc,
+#dossier-cargo-desc,
+#dossier-secret-text,
+#manual-drawer-panel p,
+.night-notes p,
+.night-notes div,
+.datapad-cell,
+.ipad-label,
+#solar-condition-rule-text,
+#solar-storm-rule-text,
+#scanner-mode-indicator,
+.telemetry-val,
+.tabular-nums,
+[id^="res-val-"],
+[id^="preview-pct-"],
+[id^="preview-bar-"],
+[id^="cargo-count-"],
+#sol-counter,
+#case-counter,
+#hangar-budget-display,
+#hangar-capacity-display,
+#scanner-rad-counter,
+#dossier-id,
+#dossier-auth-code,
+#crate-code,
+#tut-step-counter,
+#visitor-origin,
+#visitor-mass,
+#visitor-channel-tag,
+#hud-tx-status,
+#ext-env-readout,
+.geiger-box,
+.geiger-readout {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* VOZ PRINCIPAL VISUAL: 'Redaction 35' (Títulos grandes y sellos) */
+.font-redaction-35,
+.font-scifi,
+.font-heading,
+.moon-title,
+.launch-loading-title,
+h1,
+h2,
+h3,
+.title-metallic-text,
+#difficulty-screen h2,
+.contract-card .title-difficulty,
+.contract-card .text-3xl,
+.stamp-title-text,
+#stamp-approve .stamp-title-text,
+#stamp-authorize .stamp-title-text,
+#stamp-deny .stamp-title-text,
+#dialogue-speaker-name,
+#dossier-applicant,
+#hangar-capacity-counter-big,
+#night-report-title,
+#debrief-title,
+#emergency-subsystem-title,
+#emergency-scream,
+#modal-game-over-title {
+  font-family: 'Redaction 35', monospace !important;
+  letter-spacing: 0.04em;
+}
+
+:root {
+  --ui-scale: 1;
+}
+
+html {
+  font-size: calc(16px * var(--ui-scale, 1));
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* =========================================================================
+   AISLAMIENTO DEL STACKING CONTEXT Y MODALES A PANTALLA COMPLETA
+   ========================================================================= */
+
+/* 1. Aislamiento del Stacking Context de la mesa de trabajo inferior */
+#inspection-desk {
+  position: relative;
+  z-index: 10 !important;
+  isolation: isolate !important;
+}
+
+/* 2. Jerarquía estricta de modales a pantalla completa (nivel 9000) */
+#night-report-modal,
+#mission-modal,
+#cctv-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9000 !important;
+}
+
+/* =========================================================================
+   1. PALETA GUNMETAL (ACERO CEPILLADO MATE) + BISELES DE CROMO
+   ========================================================================= */
+.gunmetal-body {
+  background-color: #0b0b0e;
+  background-image: linear-gradient(135deg, #0e0e11 0%, #141417 50%, #0b0b0d 100%);
+}
+
+/* Cabecera superior: marco de titanio/acero plateado cepillado */
+.gunmetal-header {
+  position: relative;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 3px),
+    linear-gradient(180deg, #475569 0%, #1e293b 45%, #0f172a 100%) !important;
+  border-bottom: 3px solid #94a3b8 !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 0 rgba(15, 23, 42, 0.9),
+    inset 0 0 0 3px #334155,
+    0 8px 20px rgba(0, 0, 0, 0.85) !important;
+}
+
+/* Bahía superior (detrás de los paneles de esclusa y radar con viga de titanio) */
+.gunmetal-upper-bay {
+  position: relative;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 3px),
+    linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #090d16 100%) !important;
+  border-bottom: 3px solid #94a3b8 !important;
+  box-shadow:
+    inset 0 -2px 0 rgba(15, 23, 42, 0.9),
+    inset 0 0 0 2px #334155,
+    0 6px 16px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Marco de panel: Acero/Titanio Plateado Cepillado de Ingeniería Pesada */
+.chrome-panel-frame {
+  background-color: #0e0e11;
+  border: 3px solid #94a3b8 !important;
+  border-top-color: #cbd5e1 !important;
+  border-left-color: #94a3b8 !important;
+  border-right-color: #64748b !important;
+  border-bottom-color: #475569 !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 0 rgba(15, 23, 42, 0.9),
+    inset 0 0 0 3px #334155,
+    0 8px 20px rgba(0, 0, 0, 0.85) !important;
+}
+
+.chrome-header-strip {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 3px),
+    linear-gradient(180deg, #475569 0%, #1e293b 45%, #0f172a 100%) !important;
+  border-bottom: 2px solid #64748b !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+}
+
+.chrome-footer-strip {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 3px),
+    linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+  border-top: 2px solid #475569 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.chrome-subcard {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border: 2px solid #475569;
+  border-top-color: #94a3b8;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.gunmetal-modal {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 3px),
+    linear-gradient(135deg, #1b1b20 0%, #131316 100%);
+}
+
+/* ---------- MESA DE TRABAJO: ACERO OSCURO CEPILLADO CON MARCO ESTRUCTURAL ---------- */
+.desk-surface {
+  background-color: #141417;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px),
+    linear-gradient(135deg, #141417 0%, #1e1e24 50%, #121215 100%);
+  border-top: 3px solid #94a3b8 !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 0 0 3px #334155,
+    inset 0 0 130px rgba(0, 0, 0, 0.88),
+    inset 0 10px 30px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* =========================================================================
+   ELEMENTOS MODULARES DE ALEACIÓN PLATEADA / TITANIO (CYBERPUNK INDUSTRIAL)
+   ========================================================================= */
+
+/* Placas de Esquina Metálicas Plateadas (Gusset Plates en L) */
+.cyber-gusset-bracket {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.cyber-gusset-bracket.tl {
+  top: 0;
+  left: 0;
+  border-top: 3px solid #cbd5e1;
+  border-left: 3px solid #cbd5e1;
+  border-top-left-radius: 10px;
+  background: linear-gradient(135deg, rgba(203, 213, 225, 0.35) 0%, rgba(203, 213, 225, 0.08) 50%, transparent 70%);
+}
+
+.cyber-gusset-bracket.tr {
+  top: 0;
+  right: 0;
+  border-top: 3px solid #cbd5e1;
+  border-right: 3px solid #cbd5e1;
+  border-top-right-radius: 10px;
+  background: linear-gradient(225deg, rgba(203, 213, 225, 0.35) 0%, rgba(203, 213, 225, 0.08) 50%, transparent 70%);
+}
+
+.cyber-gusset-bracket.bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 3px solid #64748b;
+  border-left: 3px solid #64748b;
+  border-bottom-left-radius: 10px;
+  background: linear-gradient(45deg, rgba(100, 116, 139, 0.35) 0%, rgba(100, 116, 139, 0.08) 50%, transparent 70%);
+}
+
+.cyber-gusset-bracket.br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 3px solid #64748b;
+  border-right: 3px solid #64748b;
+  border-bottom-right-radius: 10px;
+  background: linear-gradient(315deg, rgba(100, 116, 139, 0.35) 0%, rgba(100, 116, 139, 0.08) 50%, transparent 70%);
+}
+
+/* Tornillos Hexagonales / Allen Plateados (10x10px con aro exterior y hendidura oscura) */
+.cyber-hex-bolt {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #cbd5e1 50%, #64748b 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 26;
+}
+
+.cyber-hex-bolt::after {
+  content: '';
+  width: 4.5px;
+  height: 4.5px;
+  background: #090d16;
+  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.9);
+  transform: rotate(var(--rot, 0deg));
+}
+
+.cyber-hex-bolt.rot-15::after { --rot: 15deg; }
+.cyber-hex-bolt.rot-30::after { --rot: 30deg; }
+.cyber-hex-bolt.rot-45::after { --rot: 45deg; }
+.cyber-hex-bolt.rot-60::after { --rot: 60deg; }
+.cyber-hex-bolt.rot-75::after { --rot: 75deg; }
+
+/* Abrazaderas Metálicas Intermedias (Seam Clamps con pernos gemelos) */
+.cyber-seam-clamp {
+  position: absolute;
+  height: 11px;
+  width: 32px;
+  background: linear-gradient(180deg, #cbd5e1 0%, #64748b 50%, #334155 100%);
+  border: 1px solid #e2e8f0;
+  border-bottom-color: #1e293b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 3px;
+  pointer-events: none;
+  z-index: 26;
+}
+
+.cyber-seam-clamp::before,
+.cyber-seam-clamp::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #cbd5e1 55%, #334155 100%);
+  border: 0.5px solid #0f172a;
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* Viga de Chasis Superior de la Mesa */
+.desk-top-chassis-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 18px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(148, 163, 184, 0.15) 40px, rgba(148, 163, 184, 0.15) 41px),
+    linear-gradient(180deg, rgba(148, 163, 184, 0.18) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(100, 116, 139, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 45px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.chassis-beam-labels {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+/* Muescas de Ventilación Industrial en Bajo Relieve */
+.cyber-vent-notches {
+  font-family: monospace;
+  letter-spacing: 2px;
+  color: rgba(148, 163, 184, 0.45);
+  font-size: 8px;
+  font-weight: 900;
+  user-select: none;
+}
+
+/* Remaches Dobles Plateados */
+.cyber-double-rivet {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.cyber-double-rivet span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f8fafc 0%, #94a3b8 60%, #334155 100%);
+  border: 0.5px solid #1e293b;
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.9);
+}
+
+.desk-engraved-bay {
+  position: absolute;
+  inset: 0;
+}
+
+/* Tornillos hexagonales metálicos en las esquinas */
+.hex-bolt {
+  position: absolute;
+  width: 1.05rem;
+  height: 1.05rem;
+  background:
+    radial-gradient(circle at 35% 30%, #d4d4d8 0%, #71717a 45%, #27272a 100%);
+  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.hex-bolt::after {
+  content: '';
+  position: absolute;
+  inset: 32%;
+  border-radius: 9999px;
+  background: #18181b;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.bolt-tl { top: 0.55rem; left: 0.55rem; }
+.bolt-tr { top: 0.55rem; right: 0.55rem; }
+.bolt-bl { bottom: 0.55rem; left: 0.55rem; }
+.bolt-br { bottom: 0.55rem; right: 0.55rem; }
+
+/* Ranura mecánica grabada en bajo relieve */
+.desk-recessed-groove {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  bottom: 3rem;
+  height: 0.35rem;
+  border-radius: 9999px;
+  background: #0a0a0c;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.desk-engraved-plate {
+  color: rgba(161, 161, 170, 0.5);
+  background: rgba(0, 0, 0, 0.18);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+/* =========================================================================
+   BARRAS SUPERIORES DE RECURSOS: SEGMENTADAS, CON BRILLO Y FLUJO DE ENERGÍA
+   ========================================================================= */
+.resource-card {
+  cursor: pointer !important;
+  user-select: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, transform 0.14s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-1px);
+}
+
+.resource-card:active {
+  transform: translateY(0px) scale(0.995);
+}
+
+#res-card-o2:hover {
+  border-color: rgba(34, 211, 238, 0.85) !important;
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.35), inset 0 0 10px rgba(34, 211, 238, 0.1) !important;
+}
+
+#res-card-rad:hover {
+  border-color: rgba(168, 85, 247, 0.85) !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.35), inset 0 0 10px rgba(168, 85, 247, 0.1) !important;
+}
+
+#res-card-pwr:hover {
+  border-color: rgba(251, 191, 36, 0.85) !important;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.35), inset 0 0 10px rgba(251, 191, 36, 0.1) !important;
+}
+
+#res-card-food:hover {
+  border-color: rgba(52, 211, 153, 0.85) !important;
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.35), inset 0 0 10px rgba(52, 211, 153, 0.1) !important;
+}
+
+.sci-fi-bar-track {
+  position: relative;
+  width: 100%;
+  height: 0.9rem;
+  background: #08080a;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  border: 1px solid #3f3f46;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95);
+}
+
+@keyframes energyFlow {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 1.5rem 0, 0 0; }
+}
+
+.sci-fi-bar-fill {
+  height: 100%;
+  border-radius: 0.18rem;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.2s ease;
+  background-size: 1.5rem 1.5rem, 100% 100%;
+  animation: energyFlow 1.35s linear infinite;
+}
+
+.sci-fi-fill-o2 {
+  background-image:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 0.32rem, transparent 0.32rem, transparent 0.64rem),
+    linear-gradient(90deg, #0891b2 0%, #22d3ee 65%, #67e8f9 100%);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.75);
+}
+
+.sci-fi-fill-rad {
+  background-image:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 0.32rem, transparent 0.32rem, transparent 0.64rem),
+    linear-gradient(90deg, #7e22ce 0%, #a855f7 65%, #d8b4fe 100%);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.75);
+}
+
+.sci-fi-fill-pwr {
+  background-image:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.24) 0, rgba(255, 255, 255, 0.24) 0.32rem, transparent 0.32rem, transparent 0.64rem),
+    linear-gradient(90deg, #d97706 0%, #fbbf24 65%, #fde68a 100%);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.75);
+}
+
+.sci-fi-fill-food {
+  background-image:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0.22) 0.32rem, transparent 0.32rem, transparent 0.64rem),
+    linear-gradient(90deg, #059669 0%, #34d399 65%, #6ee7b7 100%);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.75);
+}
+
+.sci-fi-bar-segments {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent calc(10% - 2px),
+    rgba(9, 9, 11, 0.95) calc(10% - 2px),
+    rgba(9, 9, 11, 0.95) 10%
+  );
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18);
+}
+
+@keyframes barPreviewUpPulse {
+  0%, 100% {
+    border-color: #34d399;
+    box-shadow: 0 0 18px rgba(52, 211, 153, 0.65), inset 0 0 12px rgba(34, 211, 238, 0.25);
+    transform: translateY(-1px);
+  }
+  50% {
+    border-color: #22d3ee;
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.35);
+    transform: translateY(0);
+  }
+}
+
+.resource-card.bar-preview-up {
+  animation: barPreviewUpPulse 0.65s ease-in-out infinite !important;
+  background: rgba(6, 78, 59, 0.45) !important;
+}
+
+@keyframes barPreviewDownPulse {
+  0%, 100% {
+    border-color: #f43f5e;
+    box-shadow: 0 0 18px rgba(244, 63, 94, 0.7), inset 0 0 12px rgba(245, 158, 11, 0.25);
+    transform: translateY(1px);
+  }
+  50% {
+    border-color: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
+    transform: translateY(0);
+  }
+}
+
+.resource-card.bar-preview-down {
+  animation: barPreviewDownPulse 0.65s ease-in-out infinite !important;
+  background: rgba(127, 29, 29, 0.5) !important;
+}
+
+.res-delta-arrow.arrow-up {
+  color: #34d399;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.9);
+  animation: bounceArrowUp 0.55s ease-in-out infinite;
+}
+
+.res-delta-arrow.arrow-down {
+  color: #fb7185;
+  text-shadow: 0 0 8px rgba(251, 113, 133, 0.9);
+  animation: bounceArrowDown 0.55s ease-in-out infinite;
+}
+
+@keyframes bounceArrowUp {
+  0%, 100% { transform: translateY(1px) scale(1); }
+  50% { transform: translateY(-2px) scale(1.18); }
+}
+
+@keyframes bounceArrowDown {
+  0%, 100% { transform: translateY(-1px) scale(1); }
+  50% { transform: translateY(2px) scale(1.18); }
+}
+
+/* =========================================================================
+   2. VENTANILLA BLINDADA: MARCO, PAISAJE, PARTÍCULAS, BALIZAS
+   ========================================================================= */
+.airlock-bezel-frame {
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 0 40px rgba(0, 0, 0, 0.95),
+    0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.airlock-rivet {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #e4e4e7, #52525b 75%);
+  border: 1px solid #18181b;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.airlock-inner-bezel {
+  position: absolute;
+  inset: 0.35rem;
+  border: 2px solid rgba(161, 161, 170, 0.28);
+  border-radius: 0.65rem;
+  clip-path: polygon(
+    14px 0, calc(100% - 14px) 0,
+    100% 14px, 100% calc(100% - 14px),
+    calc(100% - 14px) 100%, 14px 100%,
+    0 calc(100% - 14px), 0 14px
+  );
+  box-shadow: inset 0 0 25px rgba(9, 9, 11, 0.85);
+  z-index: 4;
+}
+
+.lunar-backdrop {
+  background:
+    radial-gradient(circle at 86% 18%, rgba(56, 189, 248, 0.35) 0%, rgba(14, 116, 144, 0.12) 4%, transparent 6%),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.95) 1.5px, transparent 2.5px),
+    radial-gradient(circle at 14% 22%, rgba(255, 255, 255, 0.9) 1.2px, transparent 2.2px),
+    radial-gradient(circle at 48% 12%, rgba(255, 255, 255, 0.85) 1.5px, transparent 2.5px),
+    radial-gradient(circle at 32% 30%, rgba(228, 228, 231, 0.8) 1.2px, transparent 2.2px),
+    radial-gradient(circle at 66% 26%, rgba(255, 255, 255, 0.75) 1px, transparent 2px),
+    radial-gradient(ellipse at 22% 76%, #52525b 0%, #27272a 45%, transparent 62%),
+    radial-gradient(ellipse at 76% 80%, #3f3f46 0%, #18181b 50%, transparent 68%),
+    linear-gradient(to bottom, #020204 0%, #08080f 62%, #3f3f46 64%, #27272a 82%, #121215 100%);
+}
+
+.lunar-backdrop.solar-storm-sky {
+  background:
+    radial-gradient(circle at 78% 20%, rgba(251, 146, 60, 0.68) 0%, rgba(239, 68, 68, 0.25) 35%, transparent 60%),
+    radial-gradient(circle at 24% 35%, rgba(244, 63, 94, 0.45) 0%, transparent 52%),
+    radial-gradient(ellipse at 25% 78%, #572626 0%, transparent 55%),
+    linear-gradient(to bottom, #450a0a 0%, #7c2d12 62%, #52525b 65%, #27272a 100%);
+}
+
+.viewport-glass-reflection {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(125deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 26%, transparent 28%),
+    linear-gradient(125deg, transparent 58%, rgba(228, 228, 231, 0.04) 62%, transparent 66%);
+  z-index: 6;
+}
+
+/* Polvo lunar / partículas solares moviéndose horizontalmente afuera */
+.exterior-particles-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.ext-particle {
+  position: absolute;
+  left: -5%;
+  width: var(--sz, 2px);
+  height: var(--sz, 2px);
+  border-radius: 9999px;
+  background: rgba(228, 228, 231, 0.75);
+  box-shadow: 0 0 4px rgba(228, 228, 231, 0.6);
+  opacity: 0.8;
+  animation: extDrift var(--dur, 9s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes extDrift {
+  0% { left: -5%; transform: translateY(0); }
+  50% { transform: translateY(var(--wob, 4px)); }
+  100% { left: 105%; transform: translateY(0); }
+}
+
+/* Densidad: calma (pocas, lentas), viento ionizado (más), tormenta (todas, rápidas) */
+.exterior-particles-layer[data-weather='CALM'] .ext-particle:nth-child(n + 9) { display: none; }
+.exterior-particles-layer[data-weather='IONIZED'] .ext-particle:nth-child(n + 19) { display: none; }
+.exterior-particles-layer[data-weather='IONIZED'] .ext-particle {
+  animation-duration: calc(var(--dur, 9s) * 0.55);
+  background: rgba(253, 224, 71, 0.8);
+  box-shadow: 0 0 5px rgba(251, 191, 36, 0.8);
+}
+.exterior-particles-layer[data-weather='STORM'] .ext-particle {
+  animation-duration: calc(var(--dur, 9s) * 0.28);
+  background: rgba(251, 146, 60, 0.9);
+  box-shadow: 0 0 7px rgba(239, 68, 68, 0.9);
+  width: calc(var(--sz, 2px) * 1.4);
+}
+
+/* Luces de baliza exterior parpadeando */
+.exterior-beacon-light {
+  position: absolute;
+  bottom: 22%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  z-index: 3;
+}
+
+.beacon-left {
+  left: 3%;
+  background: #ef4444;
+  box-shadow: 0 0 12px 3px rgba(239, 68, 68, 0.8);
+  animation: beaconBlink 1.4s steps(1) infinite;
+}
+
+.beacon-right {
+  right: 3%;
+  background: #fbbf24;
+  box-shadow: 0 0 12px 3px rgba(251, 191, 36, 0.8);
+  animation: beaconBlink 1.4s steps(1) 0.7s infinite;
+}
+
+@keyframes beaconBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.12; }
+}
+
+/* =========================================================================
+   AVATARES VIVOS: ENTRADA, IDLE, HABLA
+   ========================================================================= */
+/* Entrada al iniciar turno: camina/desliza desde la izquierda con rebote */
+@keyframes avatarWalkIn {
+  0%   { transform: translateX(-125%) translateY(0); opacity: 0; }
+  12%  { opacity: 1; }
+  20%  { transform: translateX(-90%) translateY(-7px); }
+  32%  { transform: translateX(-66%) translateY(0); }
+  44%  { transform: translateX(-44%) translateY(-6px); }
+  56%  { transform: translateX(-26%) translateY(0); }
+  68%  { transform: translateX(-12%) translateY(-4px); }
+  80%  { transform: translateX(-3%) translateY(0); }
+  90%  { transform: translateX(1%) translateY(-2px); }
+  100% { transform: translateX(0) translateY(0); opacity: 1; }
+}
+
+.avatar-enter {
+  animation: avatarWalkIn 1.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.avatar-idle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-idle > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Respiración del astronauta: torso y casco suben y bajan */
+@keyframes avatarBreathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2.2%) scale(1.018); }
+}
+
+.avatar-idle-human > svg {
+  transform-origin: 50% 100%;
+  animation: avatarBreathe 3.4s ease-in-out infinite;
+}
+
+/* Vibración de motor del rover */
+@keyframes roverEngineShake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(0.6px, -0.8px); }
+  50% { transform: translate(-0.7px, 0.4px); }
+  75% { transform: translate(0.4px, 0.7px); }
+}
+
+.avatar-idle-rover > svg {
+  animation: roverEngineShake 0.17s linear infinite;
+}
+
+/* Flotación de cápsula / dron */
+@keyframes moduleFloat {
+  0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+  50% { transform: translateY(-3%) rotate(0.6deg); }
+}
+
+.avatar-idle-module > svg {
+  animation: moduleFloat 3.8s ease-in-out infinite;
+}
+
+/* LED de antena parpadeante real */
+.av-led {
+  position: absolute;
+  width: 6%;
+  height: 6%;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  animation: avLedBlink 1.1s steps(1) infinite;
+  pointer-events: none;
+}
+
+.av-led-red { background: #ef4444; box-shadow: 0 0 10px 3px rgba(239, 68, 68, 0.9); }
+.av-led-green { background: #34d399; box-shadow: 0 0 10px 3px rgba(52, 211, 153, 0.9); }
+.av-led-cyan { background: #22d3ee; box-shadow: 0 0 10px 3px rgba(34, 211, 238, 0.9); }
+
+@keyframes avLedBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.1; }
+}
+
+/* Oscilación de la antena del casco */
+@keyframes antennaSway {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-8deg); }
+  50% { transform: translate(-50%, -50%) rotate(8deg); }
+}
+
+.av-antenna-sway {
+  animation: antennaSway 2.6s ease-in-out infinite;
+}
+
+/* Reflejo del visor brillando suavemente */
+.av-visor-glint {
+  position: absolute;
+  left: 31%;
+  top: 28%;
+  width: 38%;
+  height: 27%;
+  border-radius: 40% 40% 45% 45%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.av-visor-glint::after {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: -60%;
+  width: 40%;
+  height: 160%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: rotate(18deg);
+  animation: visorGlint 3.8s ease-in-out infinite;
+}
+
+@keyframes visorGlint {
+  0%, 35% { left: -60%; opacity: 0; }
+  50% { opacity: 1; }
+  80%, 100% { left: 130%; opacity: 0; }
+}
+
+/* Estroboscópica giratoria del rover */
+.av-strobe {
+  position: absolute;
+  width: 16%;
+  height: 16%;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, rgba(251, 146, 60, 0.95) 0deg 70deg, transparent 70deg 360deg);
+  filter: blur(1.5px);
+  animation: strobeSpin 0.9s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes strobeSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Radar / antena parabólica rotando continuamente */
+.av-radar-ring {
+  position: absolute;
+  width: 26%;
+  height: 26%;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  border: 2px dashed rgba(56, 189, 248, 0.85);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+  animation: radarRingSpin 2.4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes radarRingSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Vibración de "habla": el avatar tiembla ligeramente mientras transmite */
+@keyframes speakJitter {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(0.9px, -0.6px); }
+  50% { transform: translate(-0.8px, 0.5px); }
+  75% { transform: translate(0.5px, 0.8px); }
+}
+
+#visitor-avatar-stage {
+  width: 180px !important;
+  height: 175px !important;
+  background: radial-gradient(circle at 50% 35%, #090e17 0%, #020408 100%);
+  border: 3px solid #475569;
+  border-radius: 1rem;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.92),
+    inset 0 0 0 2px #0f172a,
+    inset 0 0 20px rgba(0, 0, 0, 0.85);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+#visitor-avatar-stage.avatar-speaking {
+  animation: speakJitter 0.11s linear infinite;
+  border-color: rgba(56, 189, 248, 0.95);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.92),
+    inset 0 0 0 2px #0f172a,
+    inset 0 0 16px rgba(56, 189, 248, 0.25),
+    0 0 18px rgba(56, 189, 248, 0.35);
+}
+
+.avatar-stage-screw {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #94a3b8 0%, #475569 60%, #1e293b 100%);
+  border: 1px solid #0f172a;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.8);
+  z-index: 15;
+  pointer-events: none;
+}
+
+.avatar-stage-screw::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 1px;
+  background: #0f172a;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#visitor-name {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 14px !important;
+  letter-spacing: 0.05em !important;
+  color: #f8fafc !important;
+  font-weight: 700 !important;
+  line-height: 1.2;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+.dialogue-name-tab {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 14px;
+  color: #f8fafc;
+  background: linear-gradient(90deg, #0284c7 0%, #0f172a 100%);
+  border: 1px solid #38bdf8;
+  border-bottom: none;
+  box-shadow: 0 -2px 10px rgba(2, 132, 199, 0.25);
+}
+
+/* =========================================================================
+   HUD DE TRANSMISIÓN DE CASCO + TERMINAL DE VOZ TÁCTICO
+   ========================================================================= */
+.helmet-hud-transmission {
+  background:
+    repeating-linear-gradient(0deg, rgba(56, 189, 248, 0.02) 0px, rgba(56, 189, 248, 0.02) 1px, transparent 1px, transparent 4px),
+    linear-gradient(180deg, rgba(14, 116, 144, 0.12) 0%, rgba(4, 10, 22, 0.92) 100%);
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  border-left: 4px solid #38bdf8 !important;
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.9),
+    inset 0 0 20px rgba(56, 189, 248, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  padding: 20px 24px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.dialogue-corner-bracket {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.dialogue-watermark-quote {
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 64px;
+  line-height: 1;
+  color: rgba(56, 189, 248, 0.12);
+  position: absolute;
+  top: 4px;
+  left: 12px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+#visitor-dialogue {
+  font-size: 20px !important;
+  line-height: 1.5 !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  color: #f8fafc !important;
+  text-shadow: 0 2px 10px rgba(56, 189, 248, 0.22);
+}
+
+.dialogue-keyword-hazard {
+  color: #fbbf24 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+}
+
+.dialogue-keyword-system {
+  color: #38bdf8 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+
+/* Ecualizador sutil de voz en la base */
+.dialogue-audio-bars span {
+  display: block;
+  width: 2px;
+  height: 10px;
+  background-color: #38bdf8;
+  border-radius: 1px;
+  box-shadow: 0 0 3px rgba(56, 189, 248, 0.6);
+  transform-origin: 50% 100%;
+  transform: scaleY(0.2);
+  opacity: 0.6;
+  animation: audioBarIdle 2.2s ease-in-out infinite;
+}
+
+.dialogue-audio-bars.speaking span {
+  opacity: 0.95;
+  animation: audioBarPulse 0.26s ease-in-out infinite alternate;
+}
+
+.dialogue-audio-bars span:nth-child(1) { animation-delay: 0.0s; }
+.dialogue-audio-bars span:nth-child(2) { animation-delay: 0.11s; }
+.dialogue-audio-bars span:nth-child(3) { animation-delay: 0.05s; }
+.dialogue-audio-bars span:nth-child(4) { animation-delay: 0.16s; }
+.dialogue-audio-bars span:nth-child(5) { animation-delay: 0.07s; }
+.dialogue-audio-bars span:nth-child(6) { animation-delay: 0.20s; }
+.dialogue-audio-bars span:nth-child(7) { animation-delay: 0.13s; }
+.dialogue-audio-bars span:nth-child(8) { animation-delay: 0.03s; }
+
+@keyframes audioBarPulse {
+  0% { transform: scaleY(0.2); }
+  100% { transform: scaleY(1.0); }
+}
+
+@keyframes audioBarIdle {
+  0%, 100% { transform: scaleY(0.2); opacity: 0.4; }
+  50% { transform: scaleY(0.45); opacity: 0.75; }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  color: #22d3ee;
+  margin-left: 1px;
+  text-shadow: 0 0 6px rgba(34, 211, 238, 0.9);
+  animation: cursorBlink 0.8s steps(1) infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.voice-wave-bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 0.85rem;
+}
+
+.voice-wave-bars span {
+  display: block;
+  width: 2.5px;
+  height: 100%;
+  background-color: #22d3ee;
+  border-radius: 2px;
+  box-shadow: 0 0 4px #22d3ee;
+  transform-origin: 50% 50%;
+  transform: scaleY(0.2);
+  opacity: 0.55;
+}
+
+/* En silencio: barras casi planas con respiración muy lenta */
+.voice-wave-bars:not(.speaking) span {
+  animation: voiceIdle 2.4s ease-in-out infinite;
+}
+
+/* Hablando: ecualizador frenético */
+.voice-wave-bars.speaking span {
+  opacity: 1;
+  animation: voiceEqualizer 0.22s ease-in-out infinite alternate;
+}
+
+.voice-wave-bars span:nth-child(1) { animation-delay: 0s; }
+.voice-wave-bars span:nth-child(2) { animation-delay: 0.07s; animation-duration: 0.17s; }
+.voice-wave-bars span:nth-child(3) { animation-delay: 0.03s; animation-duration: 0.26s; }
+.voice-wave-bars span:nth-child(4) { animation-delay: 0.11s; animation-duration: 0.15s; }
+.voice-wave-bars span:nth-child(5) { animation-delay: 0.05s; animation-duration: 0.24s; }
+.voice-wave-bars span:nth-child(6) { animation-delay: 0.09s; animation-duration: 0.19s; }
+
+@keyframes voiceEqualizer {
+  0% { transform: scaleY(0.2); }
+  100% { transform: scaleY(1.05); }
+}
+
+@keyframes voiceIdle {
+  0%, 100% { transform: scaleY(0.2); }
+  50% { transform: scaleY(0.38); }
+}
+
+/* =========================================================================
+   MANIFIESTO: RUGGED FIELD DATAPAD EN CIAN / COBALTO MILITAR ESPACIAL
+   (estilo Panasonic Toughbook / NASA EVA Pad con bumpers antichoque)
+   ========================================================================= */
+.datapad-dossier {
+  background: linear-gradient(145deg, #0284c7 0%, #0369a1 50%, #0c4a6e 100%);
+  border: 3px solid #38bdf8;
+  border-top-color: #7dd3fc;
+  border-bottom-color: #082f49;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.92),
+    0 0 32px rgba(14, 165, 233, 0.28),
+    inset 0 2px 3px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Protectores de esquina antichoque Datapad (Bumpers) */
+.datapad-corner-bumper {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 3.5px solid #0f172a;
+  background: #1e293b;
+  pointer-events: none;
+  z-index: 25;
+}
+.datapad-corner-bumper::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #94a3b8;
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.9);
+}
+.datapad-corner-bumper.tl {
+  top: 3px;
+  left: 3px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 8px;
+}
+.datapad-corner-bumper.tl::after {
+  top: 2px;
+  left: 2px;
+}
+.datapad-corner-bumper.tr {
+  top: 3px;
+  right: 3px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 8px;
+}
+.datapad-corner-bumper.tr::after {
+  top: 2px;
+  right: 2px;
+}
+.datapad-corner-bumper.bl {
+  bottom: 3px;
+  left: 3px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+}
+.datapad-corner-bumper.bl::after {
+  bottom: 2px;
+  left: 2px;
+}
+.datapad-corner-bumper.br {
+  bottom: 3px;
+  right: 3px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 8px;
+}
+.datapad-corner-bumper.br::after {
+  bottom: 2px;
+  right: 2px;
+}
+
+.datapad-magnetic-clip {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #5b5b64 0%, #34343b 45%, #1f1f24 100%);
+  border-bottom: 2px solid #22d3ee;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.datapad-screen-body {
+  background:
+    linear-gradient(rgba(228, 228, 231, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(228, 228, 231, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at 50% 30%, #1c1c21 0%, #0d0d10 100%);
+  background-size: 1.2rem 1.2rem, 1.2rem 1.2rem, 100% 100%;
+}
+
+.datapad-cell {
+  background: rgba(9, 9, 11, 0.78);
+  border: 1px solid rgba(113, 113, 122, 0.6);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.artemis-holo-seal {
+  background: linear-gradient(120deg, rgba(6, 182, 212, 0.25), rgba(168, 85, 247, 0.35), rgba(52, 211, 153, 0.25));
+  border: 1px solid rgba(228, 228, 231, 0.7);
+  color: #f4f4f5;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
+}
+
+.uv-paper-overlay {
+  background:
+    linear-gradient(rgba(232, 121, 249, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.14) 1px, transparent 1px),
+    radial-gradient(circle at center, #3b0764 0%, #1e1b2e 68%, #09090b 100%);
+  background-size: 0.95rem 0.95rem, 0.95rem 0.95rem, 100% 100%;
+  box-shadow: inset 0 0 30px rgba(217, 70, 239, 0.55);
+}
+
+/* =========================================================================
+   CONTENEDOR: MALETÍN ESPACIAL HAZMAT BLINDADO (PELICAN CASE AMARILLO/ROJO)
+   ========================================================================= */
+.armored-crate,
+.hazmat-crate {
+  background: linear-gradient(145deg, #d99b26 0%, #b07814 55%, #8a5a0a 100%);
+  border: 3px solid #d97706;
+  border-top-color: #fbbf24;
+  border-bottom-color: #78350f;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.92),
+    0 0 28px rgba(245, 158, 11, 0.22),
+    inset 0 2px 3px rgba(255, 255, 255, 0.35),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Costillas de refuerzo Pelican Case */
+.crate-ribs-texture {
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0px,
+    rgba(255, 255, 255, 0.12) 2px,
+    transparent 2px,
+    transparent 8px,
+    rgba(0, 0, 0, 0.28) 8px,
+    rgba(0, 0, 0, 0.28) 10px
+  );
+}
+
+/* Cierres mecánicos de presión en Rojo Carmesí */
+.crate-snap-latch {
+  width: 22px;
+  height: 28px;
+  background: linear-gradient(180deg, #f43f5e 0%, #be123c 60%, #881337 100%);
+  border: 1.5px solid #fda4af;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.65), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  position: relative;
+}
+.crate-snap-latch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  right: 3px;
+  height: 2px;
+  background: #4c0519;
+  border-radius: 1px;
+}
+
+/* Esquineros de acero atornillados en las 4 esquinas */
+.crate-corner-bracket {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 3.5px solid #4b5563;
+  pointer-events: none;
+  z-index: 15;
+}
+.crate-corner-bracket::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d1d5db;
+  box-shadow: inset 0 0 1px rgba(0,0,0,0.8);
+}
+.crate-corner-bracket.tl {
+  top: 4px;
+  left: 4px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 8px;
+}
+.crate-corner-bracket.tl::after {
+  top: 2px;
+  left: 2px;
+}
+.crate-corner-bracket.tr {
+  top: 4px;
+  right: 4px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 8px;
+}
+.crate-corner-bracket.tr::after {
+  top: 2px;
+  right: 2px;
+}
+.crate-corner-bracket.bl {
+  bottom: 4px;
+  left: 4px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+}
+.crate-corner-bracket.bl::after {
+  bottom: 2px;
+  left: 2px;
+}
+.crate-corner-bracket.br {
+  bottom: 4px;
+  right: 4px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 8px;
+}
+.crate-corner-bracket.br::after {
+  bottom: 2px;
+  right: 2px;
+}
+
+/* Franja de advertencia diagonal de alto contraste */
+.crate-hazard-stripe-bar {
+  background: repeating-linear-gradient(
+    -45deg,
+    #f59e0b,
+    #f59e0b 10px,
+    #111318 10px,
+    #111318 20px
+  );
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+#dossier-xray-zone {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 36px 18px 20px 18px !important;
+  box-sizing: border-box !important;
+  z-index: 40 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  background: linear-gradient(180deg, #180829 0%, #0d0417 100%) !important;
+  border: 2px solid #d946ef !important;
+  box-shadow: inset 0 0 24px rgba(217, 70, 239, 0.25) !important;
+  clip-path: inset(0px 100% 100% 0px);
+  overflow: hidden !important;
+  will-change: clip-path;
+}
+
+#dossier-xray-reveal {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+}
+
+#dossier-normal-content {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+  padding: 14px !important;
+  gap: 10px !important;
+  box-sizing: border-box !important;
+  min-height: 0 !important;
+}
+
+#dossier-promise-card {
+  width: 100% !important;
+  flex-shrink: 0 !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.35) !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+#dossier-promise-label {
+  font-size: 10px !important;
+  color: #94a3b8 !important;
+  letter-spacing: 0.1em !important;
+  display: block !important;
+  text-transform: uppercase !important;
+  font-family: monospace !important;
+  font-weight: 700 !important;
+}
+
+#dossier-declared-impact {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  color: #34d399 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  display: block !important;
+  margin-top: 4px !important;
+}
+
+#dossier-cargo-container {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+#dossier-cargo-desc {
+  font-size: 15px !important;
+  line-height: 1.45 !important;
+  font-weight: 500 !important;
+  color: #f1f5f9 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: break-word !important;
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+}
+
+#dossier-footer-bar {
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-top: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+#dossier-secret-text {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  color: #f5d0fe !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#dossier-xray-grid,
+.xray-resource-grid {
+  flex: 1 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  grid-template-rows: repeat(2, 1fr) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-height: 0 !important;
+}
+
+.xray-impact-card {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+
+.xray-resource-label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.xray-impact-val {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  font-family: monospace !important;
+  line-height: 1 !important;
+  margin-top: 2px !important;
+}
+
+#dossier-uv-tradeoff {
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  font-family: monospace !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#crate-xray-zone {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 46px 18px 34px 18px !important;
+  box-sizing: border-box !important;
+  z-index: 40 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: linear-gradient(180deg, #021a24 0%, #03121b 100%) !important;
+  border: 2px solid #22d3ee !important;
+  box-shadow: inset 0 0 24px rgba(34, 211, 238, 0.25) !important;
+  clip-path: inset(0px 100% 100% 0px);
+  overflow: hidden !important;
+  will-change: clip-path;
+}
+
+#crate-xray-reveal {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.crate-xray-viewport {
+  width: 100% !important;
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  background: radial-gradient(circle, rgba(8, 145, 178, 0.18) 0%, rgba(2, 6, 23, 0.95) 80%) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    radial-gradient(circle, rgba(8, 145, 178, 0.18) 0%, rgba(2, 6, 23, 0.95) 80%) !important;
+  background-size: 14px 14px, 14px 14px, 100% 100% !important;
+}
+
+.crate-xray-alert-ring {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crate-xray-alert-ring.hazard {
+  border: 1.5px dashed rgba(244, 63, 94, 0.65);
+  box-shadow: 0 0 18px rgba(244, 63, 94, 0.28), inset 0 0 14px rgba(244, 63, 94, 0.15);
+  animation: xrayRingPulse 2.2s infinite ease-in-out;
+}
+
+.crate-xray-alert-ring.safe {
+  border: 1.5px dashed rgba(34, 211, 238, 0.55);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.22), inset 0 0 12px rgba(34, 211, 238, 0.12);
+  animation: xrayRingPulse 3.5s infinite ease-in-out;
+}
+
+@keyframes xrayRingPulse {
+  0%, 100% {
+    transform: scale(0.97);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+.crate-xray-main-graphic {
+  width: 96px !important;
+  height: 96px !important;
+  max-width: 96px !important;
+  max-height: 96px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.crate-xray-main-graphic svg {
+  width: 96px !important;
+  height: 96px !important;
+  max-width: 96px !important;
+  max-height: 96px !important;
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.45));
+}
+
+.crate-xray-main-graphic.hazard svg {
+  filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.55));
+}
+
+.crate-header-bar {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 3px),
+    linear-gradient(90deg, #52525b 0%, #34343b 50%, #52525b 100%);
+}
+
+.hazard-corner-badge {
+  background: repeating-linear-gradient(-45deg, #f59e0b, #f59e0b 4px, #0f0f12 4px, #0f0f12 8px);
+  border: 1px solid #fbbf24;
+}
+
+.crate-hazard-strip {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(245, 158, 11, 0.85),
+    rgba(245, 158, 11, 0.85) 8px,
+    rgba(9, 9, 11, 0.95) 8px,
+    rgba(9, 9, 11, 0.95) 16px
+  );
+}
+
+.crate-hydraulic-latch {
+  position: absolute;
+  top: 42%;
+  width: 0.45rem;
+  height: 2.8rem;
+  background: linear-gradient(to bottom, #d4d4d8, #71717a, #d4d4d8);
+  border: 1px solid #e4e4e7;
+  border-radius: 2px;
+  z-index: 25;
+}
+
+.crate-latch-left { left: -0.35rem; }
+.crate-latch-right { right: -0.35rem; }
+
+/* =========================================================================
+   MANUAL: CARPETA AEROESPACIAL NARANJA NASA (STD-3001)
+   ========================================================================= */
+.field-deck-closed {
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0px, rgba(255, 255, 255, 0.08) 1px, transparent 1px, transparent 4px),
+    linear-gradient(145deg, #ea4c24 0%, #c23310 55%, #8f2006 100%);
+  border: 2px solid #ff7b54;
+  border-left-width: 1px;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(234, 76, 36, 0.28),
+    inset 0 1px 3px rgba(255, 255, 255, 0.35),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.field-deck-spine {
+  background: linear-gradient(90deg, #151a21 0%, #252d38 50%, #181d24 100%);
+  border-right: 2px solid #0f1318;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.7);
+}
+
+.manual-spine-hinge {
+  width: 14px;
+  height: 9px;
+  background: linear-gradient(180deg, #9ca3af 0%, #4b5563 50%, #1f2937 100%);
+  border: 1.5px solid #d1d5db;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.75), inset 0 1px 1px #ffffff;
+  position: relative;
+}
+.manual-spine-hinge::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.9);
+}
+
+.manual-corner-bracket {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3.5px solid #1e242d;
+  pointer-events: none;
+  z-index: 15;
+}
+.manual-corner-bracket::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.8);
+}
+.manual-corner-bracket.tl {
+  top: 3px;
+  left: 3px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 6px;
+}
+.manual-corner-bracket.tl::after {
+  top: 2px;
+  left: 2px;
+}
+.manual-corner-bracket.tr {
+  top: 3px;
+  right: 3px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 8px;
+}
+.manual-corner-bracket.tr::after {
+  top: 2px;
+  right: 2px;
+}
+.manual-corner-bracket.bl {
+  bottom: 3px;
+  left: 3px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 6px;
+}
+.manual-corner-bracket.bl::after {
+  bottom: 2px;
+  left: 2px;
+}
+.manual-corner-bracket.br {
+  bottom: 3px;
+  right: 3px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 8px;
+}
+.manual-corner-bracket.br::after {
+  bottom: 2px;
+  right: 2px;
+}
+
+.manual-engraved-stripes {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.15) 0px,
+    rgba(255, 255, 255, 0.15) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+}
+
+.field-deck-open-btn {
+  background: linear-gradient(90deg, #ea4c24 0%, #ff7b54 50%, #ea4c24 100%);
+  color: #fff7ed;
+  border: 1px solid #fed7aa;
+  box-shadow: 0 0 14px rgba(234, 76, 36, 0.5);
+}
+
+/* Visor: chasis industrial de mano (Titanio / Índigo / Cian) */
+.scanner-chrome-lens {
+  background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
+  border: 3px solid #38bdf8 !important;
+  border-radius: 14px !important;
+  box-shadow:
+    inset 0 0 0 2px #1e293b,
+    0 10px 24px rgba(0, 0, 0, 0.75),
+    0 0 28px rgba(56, 189, 248, 0.35) !important;
+}
+
+/* Esquineros metálicos del visor */
+.scanner-corner-bracket {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2.5px solid #64748b;
+  pointer-events: none;
+  z-index: 25;
+}
+.scanner-corner-bracket::after {
+  content: '';
+  position: absolute;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+.scanner-corner-bracket.tl {
+  top: 3px;
+  left: 3px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 6px;
+}
+.scanner-corner-bracket.tl::after {
+  top: 1.5px;
+  left: 1.5px;
+}
+.scanner-corner-bracket.tr {
+  top: 3px;
+  right: 3px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 6px;
+}
+.scanner-corner-bracket.tr::after {
+  top: 1.5px;
+  right: 1.5px;
+}
+.scanner-corner-bracket.bl {
+  bottom: 3px;
+  left: 3px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 6px;
+}
+.scanner-corner-bracket.bl::after {
+  bottom: 1.5px;
+  left: 1.5px;
+}
+.scanner-corner-bracket.br {
+  bottom: 3px;
+  right: 3px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 6px;
+}
+.scanner-corner-bracket.br::after {
+  bottom: 1.5px;
+  right: 1.5px;
+}
+
+/* Agarraderas laterales táctiles (Grips) */
+.scanner-side-grip {
+  position: absolute;
+  top: 32px;
+  bottom: 32px;
+  width: 6px;
+  background: repeating-linear-gradient(0deg, #334155, #334155 4px, #0f172a 4px, #0f172a 8px);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  pointer-events: none;
+  z-index: 20;
+}
+.scanner-side-grip.left {
+  left: 3px;
+  border-radius: 3px 0 0 3px;
+}
+.scanner-side-grip.right {
+  right: 3px;
+  border-radius: 0 3px 3px 0;
+}
+
+/* =========================================================================
+   RADAR / OSCILOSCOPIO SOLAR ANIMADO
+   ========================================================================= */
+@keyframes radarSweepRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.radar-sweep-group {
+  transform-origin: 40px 40px;
+  animation: radarSweepRotate 3.2s linear infinite;
+}
+
+@keyframes waveFlow {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -60; }
+}
+
+.oscilloscope-wave {
+  stroke-dasharray: 8 3;
+  animation: waveFlow 1.4s linear infinite;
+}
+
+@keyframes stormBlinkRed {
+  0%, 100% {
+    background-color: rgba(159, 18, 57, 0.85);
+    border-color: #fb7185;
+    box-shadow: 0 0 14px rgba(244, 63, 94, 0.8);
+  }
+  50% {
+    background-color: rgba(76, 5, 25, 0.85);
+    border-color: #f43f5e;
+    box-shadow: 0 0 4px rgba(244, 63, 94, 0.3);
+  }
+}
+
+.weather-badge-storm {
+  animation: stormBlinkRed 0.65s ease-in-out infinite;
+}
+
+/* =========================================================================
+   OBJETOS DEL ESCRITORIO Y SELLOS HIDRÁULICOS 3D (ACELERACIÓN GPU 60/120 FPS)
+   ========================================================================= */
+.draggable-item {
+  touch-action: none;
+  cursor: grab;
+  will-change: transform, left, top;
+  transform: translateZ(0);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.14s ease;
+}
+
+#draggable-scanner,
+#draggable-dossier,
+#draggable-crate,
+#draggable-manual,
+#stamp-approve,
+#stamp-authorize,
+#stamp-deny,
+.stamp-hydraulic {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  will-change: transform, left, top;
+  transform: translateZ(0);
+}
+
+/* Aislamiento de capas GPU para evitar repintado de la mitad superior al arrastrar */
+#game-viewport-scaler > header,
+.gunmetal-upper-bay,
+#airlock-viewport-panel,
+#solar-radar-monitor-panel,
+.resource-card {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+/* Layout del Panel Radar Solar y Telemetría NASA al 100% de alto y ancho */
+#solar-radar-monitor-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  flex: 1 !important;
+  gap: 10px !important;
+  height: 100% !important;
+}
+
+#nasa-donki-class-badge {
+  font-family: 'Redaction 35', 'Courier New', monospace !important;
+}
+
+/* Congelar animaciones en pantallas y modales ocultos */
+.hidden *,
+[style*="display: none"] *,
+#title-screen.hidden *,
+#difficulty-screen.hidden *,
+#hangar-loadout-screen.hidden * {
+  animation-play-state: paused !important;
+}
+
+.draggable-item.is-dragging {
+  cursor: grabbing;
+  transform: scale(1.035) rotate(-1.5deg);
+  box-shadow: 0 24px 44px -8px rgba(0, 0, 0, 0.9), 0 0 22px rgba(228, 228, 231, 0.2);
+}
+
+.stamp-snap-back {
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+/* Sellos: selladores hidráulicos industriales de mano en acero pintado */
+.stamp-hydraulic-auth {
+  background: linear-gradient(145deg, #10b981 0%, #047857 55%, #064e3b 100%) !important;
+  border: 2px solid #6ee7b7 !important;
+  border-radius: 16px !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    0 0 32px rgba(16, 185, 129, 0.35) !important;
+}
+
+.stamp-hydraulic-deny {
+  background: linear-gradient(145deg, #f43f5e 0%, #be123c 55%, #881337 100%) !important;
+  border: 2px solid #fda4af !important;
+  border-radius: 16px !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    0 0 32px rgba(244, 63, 94, 0.35) !important;
+}
+
+.stamp-corner-screw {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #cbd5e1 50%, #475569 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 0 1px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 10;
+}
+.stamp-corner-screw.tl { top: 4px; left: 4px; }
+.stamp-corner-screw.tr { top: 4px; right: 4px; }
+.stamp-corner-screw.bl { bottom: 4px; left: 4px; }
+.stamp-corner-screw.br { bottom: 4px; right: 4px; }
+
+.stamp-title-text {
+  font-family: 'Redaction 35', monospace !important;
+  font-size: clamp(1.1rem, 1.45vw, 1.4rem) !important;
+  letter-spacing: 0.05em !important;
+  white-space: nowrap;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hazard-stripe-green {
+  background: repeating-linear-gradient(-45deg, #064e3b, #064e3b 6px, #10b981 6px, #10b981 12px) !important;
+}
+
+.hazard-stripe-red {
+  background: repeating-linear-gradient(-45deg, #4c0519, #4c0519 6px, #f43f5e 6px, #f43f5e 12px) !important;
+}
+
+.desk-slide-transition {
+  transition:
+    transform 0.34s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.32s ease !important;
+  pointer-events: none !important;
+}
+
+.slide-out-dossier {
+  transform: translate(-11rem, -13rem) rotate(-12deg) scale(0.9) !important;
+  opacity: 0 !important;
+}
+
+.slide-out-crate {
+  transform: translate(13rem, -13rem) rotate(10deg) scale(0.9) !important;
+  opacity: 0 !important;
+}
+
+@keyframes slideInFromSide {
+  0% { transform: translateX(-20rem) rotate(-8deg) scale(0.94); opacity: 0; }
+  100% { transform: translateX(0) rotate(0deg) scale(1); opacity: 1; }
+}
+
+.slide-in-enter {
+  animation: slideInFromSide 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes screenShake300 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-6px, -4px) rotate(-0.4deg); }
+  30% { transform: translate(6px, 3px) rotate(0.4deg); }
+  45% { transform: translate(-5px, 4px) rotate(-0.3deg); }
+  60% { transform: translate(4px, -3px) rotate(0.2deg); }
+  75% { transform: translate(-3px, 2px) rotate(-0.15deg); }
+  90% { transform: translate(2px, -1px) rotate(0.1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.screen-shake {
+  animation: screenShake300 300ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes impactDotBlink {
+  0%, 100% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 10px #fbbf24, 0 0 18px #f59e0b; }
+  50% { transform: scale(0.75); opacity: 0.3; box-shadow: 0 0 2px #fbbf24; }
+}
+
+.impact-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #fbbf24;
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.impact-dot.active {
+  opacity: 1;
+  animation: impactDotBlink 0.55s ease-in-out infinite;
+}
+
+#draggable-dossier.stamp-hover-authorize {
+  outline: 3px solid #34d399;
+  box-shadow: 0 0 28px rgba(52, 211, 153, 0.65);
+}
+
+#draggable-dossier.stamp-hover-deny {
+  outline: 3px solid #fb7185;
+  box-shadow: 0 0 28px rgba(251, 113, 133, 0.65);
+}
+
+.xray-secret {
+  transition: box-shadow 0.15s ease;
+  opacity: 1 !important;
+}
+
+.xray-target.is-scanned {
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.4);
+}
+
+.scanner-laser-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.8), rgba(255, 255, 255, 0.9), rgba(34, 211, 238, 0.8), transparent);
+  box-shadow: 0 0 8px #22d3ee;
+  animation: laserScan 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes laserScan {
+  0%, 100% { top: 6%; opacity: 0.45; }
+  50% { top: 92%; opacity: 0.85; }
+}
+
+.crt-monitor {
+  background: radial-gradient(circle at center, #052e16 0%, #02140a 75%, #010904 100%);
+}
+
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.32) 3px,
+    rgba(0, 0, 0, 0.32) 4px
+  );
+  z-index: 5;
+}
+
+@keyframes dangerPulse {
+  0%, 100% {
+    background-color: rgba(127, 29, 29, 0.78);
+    border-color: #ef4444;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.75);
+  }
+  50% {
+    background-color: rgba(15, 15, 18, 0.95);
+    border-color: #f87171;
+    box-shadow: 0 0 4px rgba(239, 68, 68, 0.25);
+  }
+}
+
+.resource-danger {
+  animation: dangerPulse 0.65s ease-in-out infinite !important;
+}
+
+@keyframes stampSlam {
+  0% { transform: scale(2.1) rotate(-14deg); opacity: 0; }
+  70% { transform: scale(0.95) rotate(-8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-8deg); opacity: 0.92; }
+}
+
+.stamp-mark-animate {
+  animation: stampSlam 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+}
+
+@keyframes manualPop {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.manual-open-anim {
+  animation: manualPop 0.16s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+/* =========================================================================
+   CCTV: MONITOR TÁCTICO DE CÁMARAS INTERNAS (PARTE 1)
+   ========================================================================= */
+.cctv-mini-btn {
+  flex-shrink: 0;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 0.2rem 0.35rem;
+  border-radius: 0.25rem;
+  color: #e4e4e7;
+  background: linear-gradient(180deg, #3f3f46, #1f1f23);
+  border: 1px solid #71717a;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: box-shadow 0.15s ease, color 0.15s ease;
+}
+
+.cctv-mini-btn:hover,
+.cctv-card-link:hover .cctv-mini-btn {
+  color: #67e8f9;
+  border-color: #22d3ee;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+}
+
+.cctv-card-link { cursor: pointer; }
+
+.cctv-open-btn {
+  color: #a5f3fc;
+  background: linear-gradient(180deg, #27272a, #0f0f12);
+  border: 1px solid #22d3ee;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+}
+
+.cctv-open-btn:hover { background: #164e63; color: #fff; }
+
+.cctv-backdrop {
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.cctv-frame {
+  width: min(68rem, 96vw);
+  height: min(41rem, 94vh);
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 3px),
+    linear-gradient(135deg, #1b1b20 0%, #111114 100%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 40px rgba(34, 211, 238, 0.12);
+}
+
+.cctv-close-btn {
+  color: #fecdd3;
+  background: linear-gradient(180deg, #7f1d1d, #450a0a);
+  border: 1px solid #fb7185;
+}
+
+.cctv-close-btn:hover { background: #be123c; color: #fff; }
+
+.cctv-rec-dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: avLedBlink 1.2s steps(1) infinite;
+}
+
+.cctv-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #a1a1aa;
+  background: linear-gradient(180deg, #26262b, #151518);
+  border: 1px solid #3f3f46;
+  cursor: pointer;
+  text-align: left;
+}
+
+.cctv-tab:hover { color: #fff; border-color: #a1a1aa; }
+.cctv-tab.active {
+  color: #fff;
+  border-color: #22d3ee;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.45), inset 0 0 10px rgba(34, 211, 238, 0.12);
+}
+
+.cctv-tab-name { flex: 1; }
+.cctv-tab-val { color: #e4e4e7; }
+.cctv-tab-dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: #34d399; box-shadow: 0 0 6px currentColor; }
+.cctv-tab[data-state='degraded'] .cctv-tab-dot { background: #fbbf24; }
+.cctv-tab[data-state='critical'] .cctv-tab-dot { background: #ef4444; animation: avLedBlink 0.6s steps(1) infinite; }
+
+.cctv-screen {
+  background: #050506;
+  border: 2px solid #52525b;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+.cctv-room { position: absolute; inset: 0; }
+.cctv-room.hidden {
+  display: none !important;
+}
+
+.cctv-scene { position: absolute; inset: 0; }
+.cctv-scene > svg { width: 100%; height: 100%; display: block; }
+
+.cctv-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0 2px, rgba(0, 0, 0, 0.18) 3px 4px);
+  mix-blend-mode: multiply;
+}
+
+.cctv-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 21;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.cctv-osd {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.7rem;
+  z-index: 22;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: #e4e4e7;
+  text-shadow: 0 0 4px #000;
+}
+
+.cctv-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: repeating-linear-gradient(45deg, #0e0e11 0 12px, #141417 12px 24px);
+}
+
+.cctv-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 0.9rem;
+  transform: translateX(-50%);
+  z-index: 25;
+  padding: 0.35rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  background: rgba(9, 9, 11, 0.88);
+  border: 2px solid #34d399;
+  color: #6ee7b7;
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.45);
+}
+
+.cctv-badge-warn { border-color: #fbbf24; color: #fde68a; box-shadow: 0 0 16px rgba(251, 191, 36, 0.45); }
+.cctv-badge-blue { border-color: #38bdf8; color: #bae6fd; box-shadow: 0 0 16px rgba(56, 189, 248, 0.5); }
+.cctv-badge-crit {
+  border-color: #ef4444;
+  color: #fecaca;
+  font-size: 0.9rem;
+  animation: stormBlinkRed 0.7s ease-in-out infinite;
+}
+
+.cctv-darkness { position: absolute; inset: 0; z-index: 18; background: rgba(0, 0, 0, 0.62); pointer-events: none; }
+
+.cctv-alarm-light {
+  position: absolute;
+  z-index: 19;
+  top: 0.4rem;
+  right: 1rem;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, rgba(239, 68, 68, 0.95) 0deg 80deg, transparent 80deg 360deg);
+  filter: blur(2px);
+  animation: strobeSpin 0.8s linear infinite;
+}
+
+.cctv-alarm-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 19;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 90% 0%, rgba(239, 68, 68, 0.45), transparent 60%);
+  animation: avLedBlink 0.8s steps(1) infinite;
+}
+
+/* ---------- Transformaciones SVG ---------- */
+.stalk, .ring-spin, .ring-spin-rev, .tran-arm, .smoke, .weld-arm, .drip {
+  transform-box: fill-box;
+}
+
+/* ---------- BIODOMO ---------- */
+.stalk { transform-origin: 50% 100%; }
+.stalk-ok { animation: stalkSway 3.2s ease-in-out infinite; }
+.stalk-wilt { transform: rotate(16deg); }
+.stalk-dead { transform: rotate(38deg); }
+
+@keyframes stalkSway {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+
+.uv-cone { opacity: 0.85; animation: uvPulse 3s ease-in-out infinite; }
+.uv-tube { fill: #e9d5ff; }
+
+@keyframes uvPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.cctv-scene[data-state='degraded'] .uv-cone { opacity: 0.45; animation: none; }
+.cctv-scene[data-state='degraded'] .uv-tube { fill: #a78bfa; filter: none; }
+.cctv-scene[data-state='degraded'] .uv-flicker { animation: uvFlicker 0.9s steps(1) infinite; }
+.cctv-scene[data-state='critical'] .uv-cone { opacity: 0; animation: none; }
+.cctv-scene[data-state='critical'] .uv-tube { fill: #3f3f46; filter: none; }
+
+@keyframes uvFlicker {
+  0%, 100% { opacity: 1; }
+  12% { opacity: 0.05; }
+  25% { opacity: 0.8; }
+  40% { opacity: 0; }
+  55% { opacity: 0.6; }
+  80% { opacity: 0.1; }
+}
+
+.drip { animation: dripFall 1.5s ease-in infinite; }
+.drip-slow { animation-duration: 3.2s; }
+
+@keyframes dripFall {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(78px); opacity: 0; }
+}
+
+.tran-arm { transform-origin: 0% 50%; animation: tranArm 2.4s ease-in-out infinite; }
+
+@keyframes tranArm {
+  0%, 100% { transform: rotate(-24deg); }
+  50% { transform: rotate(10deg); }
+}
+
+/* ---------- REACTOR ---------- */
+.ring-spin { transform-origin: 50% 50%; animation: ringSpin 2.2s linear infinite; }
+.ring-spin-rev { transform-origin: 50% 50%; animation: ringSpin 3.4s linear infinite reverse; }
+
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+
+.cctv-scene[data-state='degraded'] .ring-spin { animation-duration: 9s; }
+.cctv-scene[data-state='degraded'] .ring-spin-rev { animation-duration: 13s; }
+.cctv-scene[data-state='critical'] .ring-spin { animation-duration: 6s; animation-timing-function: steps(24); }
+.cctv-scene[data-state='critical'] .ring-spin-rev { animation-duration: 8s; animation-timing-function: steps(18); }
+
+.plasma { animation: plasmaFlicker 0.35s steps(1) infinite; }
+.plasma:nth-of-type(2n) { animation-delay: 0.12s; }
+
+@keyframes plasmaFlicker {
+  0%, 100% { opacity: 1; stroke-width: 3; }
+  33% { opacity: 0.45; stroke-width: 1.6; }
+  66% { opacity: 0.9; stroke-width: 4; }
+}
+
+.cctv-scene[data-state='degraded'] .plasma { animation-duration: 1.4s; opacity: 0.55; }
+.cctv-scene[data-state='critical'] .plasma { animation-duration: 0.12s; }
+
+.reactor-core { animation: coreBreath 1.6s ease-in-out infinite; }
+@keyframes coreBreath { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+.cctv-scene[data-state='degraded'] .reactor-core { animation-duration: 4s; opacity: 0.6; }
+
+.reactor-shake { animation: reactorShake 0.1s linear infinite; }
+
+@keyframes reactorShake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-2.5px, 1.5px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-1.5px, -1px); }
+}
+
+.spark { animation: sparkFlash 0.5s steps(1) infinite; }
+.spark:nth-of-type(2n) { animation-delay: 0.17s; }
+.spark:nth-of-type(3n) { animation-delay: 0.33s; }
+
+@keyframes sparkFlash {
+  0%, 100% { opacity: 0; }
+  20% { opacity: 1; }
+  45% { opacity: 0; }
+  70% { opacity: 0.9; }
+}
+
+.smoke { transform-origin: 50% 50%; animation: smokeRise 3.4s ease-out infinite; }
+.smoke:nth-of-type(2n) { animation-delay: 1.1s; }
+.smoke:nth-of-type(3n) { animation-delay: 2.1s; }
+
+@keyframes smokeRise {
+  0% { transform: translateY(0) scale(0.5); opacity: 0; }
+  20% { opacity: 0.7; }
+  100% { transform: translateY(-190px) scale(2.6); opacity: 0; }
+}
+
+.warn-amber { animation: avLedBlink 0.9s steps(1) infinite; }
+.weld-spark { animation: sparkFlash 0.28s steps(1) infinite; }
+.weld-arm { transform-origin: 0% 50%; animation: tranArm 1.8s ease-in-out infinite; }
+
+/* =========================================================================
+   CCTV PARTE 2: ESCUDO MAGNETOSFÉRICO, PLANTA CRIOGÉNICA Y MINIATURAS
+   ========================================================================= */
+.turbine, .bubble, .dust-cloud, .wind-p, .dome-solid, .dome-flicker, .rad-beam, .arc-zap { transform-box: fill-box; }
+.turbine { transform-origin: 50% 50%; }
+
+/* Pila de etiquetas (varias alertas a la vez) */
+.cctv-badge-stack {
+  position: absolute;
+  left: 50%;
+  bottom: 0.8rem;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.cctv-badge-stack .cctv-badge { position: static; transform: none; }
+.cctv-badge-violet { border-color: #a78bfa; color: #ddd6fe; box-shadow: 0 0 16px rgba(167, 139, 250, 0.5); }
+
+/* ---------- ESCUDO MAGNETOSFÉRICO ---------- */
+.dome-solid { animation: domePulse 3.2s ease-in-out infinite; }
+@keyframes domePulse { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+
+.dome-flicker { animation: uvFlicker 1.1s steps(1) infinite; }
+
+.arc-zap { animation: sparkFlash 0.45s steps(1) infinite; }
+
+.rad-beam { animation: plasmaFlicker 0.3s steps(1) infinite; }
+
+.wind-p { opacity: 0; }
+.wind-deflect { animation: windDeflect 2.8s ease-in infinite; }
+.wind-pierce { animation: windPierce 2.8s ease-in infinite; }
+
+@keyframes windDeflect {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  52% { transform: translate(var(--dx), var(--dy)); opacity: 1; }
+  100% { transform: translate(calc(var(--dx) + var(--rx)), calc(var(--dy) + var(--ry))); opacity: 0; }
+}
+
+@keyframes windPierce {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  52% { transform: translate(var(--dx), var(--dy)); opacity: 1; }
+  100% { transform: translate(var(--px), calc(var(--py) + 150px)); opacity: 0.2; }
+}
+
+.geiger-box {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.8rem;
+  z-index: 24;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  background: rgba(9, 9, 11, 0.9);
+  border: 1px solid #52525b;
+}
+.geiger-led { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: currentColor; animation: avLedBlink 1.6s steps(1) infinite; }
+.geiger-ok { color: #6ee7b7; border-color: #10b981; }
+.geiger-warn { color: #fde68a; border-color: #f59e0b; }
+.geiger-warn .geiger-led { animation-duration: 0.45s; }
+.geiger-crit { color: #fca5a5; border-color: #ef4444; }
+.geiger-crit .geiger-led { animation-duration: 0.12s; }
+
+/* Interferencia de estática ("nieve") sobre la lente */
+.cctv-snow {
+  position: absolute;
+  inset: 0;
+  z-index: 23;
+  pointer-events: none;
+  opacity: 0.38;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation: snowShift 0.35s steps(5) infinite;
+}
+@keyframes snowShift {
+  0% { background-position: 0 0; }
+  20% { background-position: -70px 40px; }
+  40% { background-position: 50px -90px; }
+  60% { background-position: -120px -30px; }
+  80% { background-position: 90px 80px; }
+  100% { background-position: -30px 120px; }
+}
+
+/* ---------- PLANTA CRIOGÉNICA / SOPORTE VITAL ---------- */
+.turbine-fast { animation: ringSpin 0.8s linear infinite; }
+.turbine-mid { animation: ringSpin 3s linear infinite; }
+.turbine-slow { animation: ringSpin 7s linear infinite; }
+.turbine-stop { animation: none; }
+
+.bubble { animation: bubbleRise 2.6s ease-in infinite; opacity: 0; }
+@keyframes bubbleRise {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.95; }
+  100% { transform: translateY(calc(var(--rise, 80px) * -1)); opacity: 0; }
+}
+
+.dust-cloud { animation: dustDrift 4.2s ease-in-out infinite; filter: blur(3px); }
+@keyframes dustDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  50% { transform: translate(14px, 8px) scale(1.18); opacity: 0.7; }
+}
+
+.flow-dash { stroke-dasharray: 8 6; animation: waveFlow 0.9s linear infinite; }
+
+/* Escarcha / empañamiento en los bordes (crítico) */
+.cctv-frost {
+  position: absolute;
+  inset: 0;
+  z-index: 22;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 48%, rgba(186, 230, 253, 0.28) 78%, rgba(224, 242, 254, 0.62) 100%);
+  box-shadow: inset 0 0 70px 24px rgba(203, 233, 255, 0.42);
+  animation: frostBreath 3.5s ease-in-out infinite;
+}
+@keyframes frostBreath { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+
+/* ---------- Miniaturas 2x2 del Reporte Nocturno ---------- */
+.cctv-mini-cell {
+  border: 2px solid #52525b;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #050506;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+.cctv-mini-cell[data-state='degraded'] { border-color: #f59e0b; }
+.cctv-mini-cell[data-state='critical'] { border-color: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.55); }
+.cctv-mini-stage { position: relative; width: 100%; aspect-ratio: 800 / 420; overflow: hidden; }
+.cctv-mini-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  background: #111114;
+  color: #d4d4d8;
+}
+.cctv-mini-cell .cctv-badge-stack { bottom: 0.25rem; gap: 0.15rem; }
+.cctv-mini-cell .cctv-badge { font-size: 0.5rem; padding: 0.12rem 0.4rem; border-width: 1px; max-width: 94%; white-space: normal; text-align: center; }
+.cctv-mini-cell .cctv-badge-stack .cctv-badge:nth-child(n + 2) { display: none; }
+.cctv-mini-cell > .cctv-mini-stage .cctv-badge:not(.cctv-badge-stack .cctv-badge) { font-size: 0.5rem; padding: 0.12rem 0.4rem; bottom: 0.25rem; }
+.cctv-mini-cell .geiger-box { display: none; }
+.cctv-mini-cell .cctv-alarm-light { width: 1.8rem; height: 1.8rem; }
+
+
+/* =========================================================================
+   14. FASE PRE-MISIÓN: SPLASH SCREEN "MOON", DIFICULTAD Y HANGAR TÁCTIL
+   ========================================================================= */
+
+/* Fondo Estelar 100% Opaco Pre-Misión (Bloquea por completo la esclusa y el escritorio) */
+#premission-starfield {
+  position: fixed;
+  inset: 0;
+  background-color: #020205 !important;
+  z-index: 9000 !important;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#title-screen {
+  z-index: 9010 !important;
+  background-color: #05070d !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#difficulty-screen {
+  z-index: 9005 !important;
+  background-color: #020205 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#hangar-loadout-screen {
+  z-index: 9005 !important;
+  background-color: #020205 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Tipografía Metálica Sci-Fi con Reflejo Cromo */
+.title-metallic-text {
+  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 55%, #475569 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 0.1 Título Gigante "MOON" en Fuente Redaction 35 */
+.moon-title {
+  font-family: 'Redaction 35', 'Courier New', monospace, serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(6rem, 15vw, 11rem);
+  letter-spacing: 0.12em;
+  margin-right: -0.12em;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow:
+    0 0 25px rgba(248, 250, 252, 0.85),
+    0 0 50px rgba(56, 189, 248, 0.45),
+    0 0 90px rgba(192, 132, 252, 0.25);
+  user-select: none;
+  animation: moonGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes moonGlow {
+  0% {
+    text-shadow:
+      0 0 20px rgba(248, 250, 252, 0.75),
+      0 0 45px rgba(56, 189, 248, 0.35),
+      0 0 75px rgba(192, 132, 252, 0.2);
+  }
+  100% {
+    text-shadow:
+      0 0 35px rgba(248, 250, 252, 0.95),
+      0 0 65px rgba(56, 189, 248, 0.6),
+      0 0 110px rgba(192, 132, 252, 0.35);
+  }
+}
+
+/* Estrellas Parpadeantes en Fondo Negro Puro */
+.star-twinkle { animation: starTwinkle 2.5s ease-in-out infinite alternate; }
+.star-fast { animation: starTwinkle 1.4s ease-in-out infinite alternate; }
+.star-slow { animation: starTwinkle 3.8s ease-in-out infinite alternate; }
+
+@keyframes starTwinkle {
+  0% { opacity: 0.2; transform: scale(0.85); }
+  50% { opacity: 0.95; transform: scale(1.15); }
+  100% { opacity: 0.3; transform: scale(0.9); }
+}
+
+/* Tornillos Hexagonales Metálicos en Esquinas de Tarjetas */
+.corner-screw {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(135deg, #d4d4d8 0%, #52525b 50%, #27272a 100%);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px #ffffff, 0 1px 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+.screw-tl { top: 8px; left: 8px; }
+.screw-tr { top: 8px; right: 8px; }
+.screw-bl { bottom: 8px; left: 8px; }
+.screw-br { bottom: 8px; right: 8px; }
+
+/* 0.2 Tarjetas de Dificultad Gunmetal/Cromo */
+.contract-card-cadet:hover {
+  border-color: #34d399 !important;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.45), 0 15px 30px rgba(0, 0, 0, 0.8);
+}
+.contract-card-engineer:hover {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.45), 0 15px 30px rgba(0, 0, 0, 0.8);
+}
+.contract-card-commander:hover {
+  border-color: #fb7185 !important;
+  box-shadow: 0 0 35px rgba(244, 63, 94, 0.45), 0 15px 30px rgba(0, 0, 0, 0.8);
+}
+
+/* 0.3 Estantería de Carga Táctil (Drag & Drop) */
+.draggable-supply-card {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.draggable-supply-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+}
+.draggable-supply-card:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+.draggable-supply-card.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Clon flotante de arrastre con cursor / dedo */
+.drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%) scale(1.05);
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+  font-size: 0.8rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.95), 0 0 25px rgba(56, 189, 248, 0.7);
+  border: 2px solid #ffffff;
+  background: rgba(9, 9, 11, 0.95);
+  color: #ffffff;
+}
+
+/* Panel del Cohete como Zona de Colocación (Drop Zone) */
+#rocket-drop-zone.dropzone-active {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.4), inset 0 0 20px rgba(56, 189, 248, 0.15) !important;
+}
+
+.cargo-bay-dropzone.dragover {
+  border-color: #34d399 !important;
+  background: rgba(6, 78, 59, 0.6) !important;
+  box-shadow: 0 0 25px rgba(52, 211, 153, 0.5) !important;
+}
+
+/* Ranuras individuales dentro de la nave */
+.rocket-cargo-slot {
+  height: 2.1rem;
+  border-radius: 0.35rem;
+  background: rgba(18, 18, 22, 0.85);
+  border: 1px dashed rgba(113, 113, 122, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #71717a;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.2s ease;
+}
+
+/* Contenedor físico cargado en la bahía de carga */
+.cargo-pod {
+  width: 100%;
+  height: 2.1rem;
+  border-radius: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.4rem;
+  font-size: 0.58rem;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+.cargo-pod:hover {
+  transform: scale(1.03);
+  filter: brightness(1.2);
+}
+.cargo-pod:hover::after {
+  content: '[X] RETIRAR';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f87171;
+  font-size: 0.55rem;
+  font-weight: 900;
+}
+
+.cargo-slide-in {
+  animation: cargoSlotSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes cargoSlotSlide {
+  0% { opacity: 0; transform: translateY(-10px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pod-o2 {
+  background: linear-gradient(135deg, #0e7490 0%, #0891b2 50%, #06b6d4 100%);
+  border: 1.5px solid #67e8f9;
+  color: #ecfeff;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 10px rgba(6, 182, 212, 0.4);
+}
+.pod-rad {
+  background: linear-gradient(135deg, #6b21a8 0%, #7e22ce 50%, #9333ea 100%);
+  border: 1.5px solid #d8b4fe;
+  color: #faf5ff;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 10px rgba(168, 85, 247, 0.4);
+}
+.pod-pwr {
+  background: linear-gradient(135deg, #b45309 0%, #d97706 50%, #f59e0b 100%);
+  border: 1.5px solid #fde68a;
+  color: #fffbeb;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 10px rgba(245, 158, 11, 0.4);
+}
+.pod-food {
+  background: linear-gradient(135deg, #065f46 0%, #047857 50%, #10b981 100%);
+  border: 1.5px solid #a7f3d0;
+  color: #ecfdf5;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+/* Llamas de Ignición y Penachos de Motores */
+.engine-plume {
+  width: 1.4rem;
+  height: 4rem;
+  background: radial-gradient(ellipse at 50% 0%, #ffffff 0%, #38bdf8 25%, #f97316 60%, transparent 100%);
+  box-shadow: 0 0 20px #f97316;
+  animation: engineRoar 0.07s infinite alternate;
+  clip-path: polygon(20% 0%, 80% 0%, 100% 90%, 50% 100%, 0% 90%);
+}
+
+@keyframes engineRoar {
+  0% { transform: scaleY(0.9) scaleX(0.95); opacity: 0.9; }
+  100% { transform: scaleY(1.18) scaleX(1.05); opacity: 1; }
+}
+
+/* Nubes de Humo en la Base */
+.smoke-cloud {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 244, 245, 0.8) 0%, rgba(161, 161, 170, 0.4) 50%, transparent 80%);
+  filter: blur(8px);
+}
+.smoke-1 { width: 120px; height: 70px; left: 10%; animation: smokePuff1 0.8s ease-out infinite; }
+.smoke-2 { width: 140px; height: 80px; left: 45%; animation: smokePuff2 0.7s ease-out infinite; }
+.smoke-3 { width: 130px; height: 75px; left: 25%; animation: smokePuff3 0.9s ease-out infinite; }
+
+@keyframes smokePuff1 { 0% { transform: scale(0.6) translateY(10px); opacity: 0.3; } 50% { opacity: 0.85; } 100% { transform: scale(1.6) translateY(-25px); opacity: 0; } }
+@keyframes smokePuff2 { 0% { transform: scale(0.5) translateY(10px); opacity: 0.4; } 50% { opacity: 0.9; } 100% { transform: scale(1.7) translateY(-30px); opacity: 0; } }
+@keyframes smokePuff3 { 0% { transform: scale(0.7) translateY(10px); opacity: 0.3; } 50% { opacity: 0.8; } 100% { transform: scale(1.5) translateY(-20px); opacity: 0; } }
+
+/* Vibración de Pantalla durante el Despegue */
+.launch-screen-shake {
+  animation: screenShakeLaunch 0.05s infinite !important;
+}
+
+@keyframes screenShakeLaunch {
+  0% { transform: translate(1.5px, 1px) rotate(0.1deg); }
+  25% { transform: translate(-2px, -1.5px) rotate(-0.1deg); }
+  50% { transform: translate(2px, -1px) rotate(0.15deg); }
+  75% { transform: translate(-1.5px, 2px) rotate(-0.15deg); }
+  100% { transform: translate(1px, 1.5px) rotate(0.1deg); }
+}
+
+/* Ascenso Vertical del Cohete */
+.rocket-liftoff {
+  transform: translateY(-135vh) !important;
+  transition: transform 2.2s cubic-bezier(0.35, 0, 0.2, 1) !important;
+}
+
+/* =========================================================================
+   15. SISTEMA DE TUTORIAL INTERACTIVO CON RECORTE DE ENFOQUE (SPOTLIGHT BLUR)
+   ========================================================================= */
+
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: auto;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tut-blur-panel {
+  background: rgba(5, 5, 10, 0.88);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: auto;
+}
+
+#tut-highlight-box {
+  position: absolute;
+  border: 2px solid #22d3ee;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 25px rgba(34, 211, 238, 0.5), inset 0 0 15px rgba(34, 211, 238, 0.25);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Esquinas técnicas del marco de enfoque */
+.tut-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: #38bdf8;
+  border-style: solid;
+  pointer-events: none;
+}
+.tut-tl { top: -4px; left: -4px; border-width: 3px 0 0 3px; border-top-left-radius: 6px; }
+.tut-tr { top: -4px; right: -4px; border-width: 3px 3px 0 0; border-top-right-radius: 6px; }
+.tut-bl { bottom: -4px; left: -4px; border-width: 0 0 3px 3px; border-bottom-left-radius: 6px; }
+.tut-br { bottom: -4px; right: -4px; border-width: 0 3px 3px 0; border-bottom-right-radius: 6px; }
+
+#tut-tooltip {
+  transition: top 0.35s cubic-bezier(0.22, 1, 0.36, 1), left 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  z-index: 20;
+}
+
+/* =========================================================================
+   SISTEMA DE EMERGENCIAS Y MICRO-JUEGOS ESTILO WARIOWARE
+   ========================================================================= */
+.emergency-border-flash {
+  box-shadow: inset 0 0 65px rgba(244, 63, 94, 0.6), inset 0 0 25px rgba(245, 158, 11, 0.45);
+  border: 4px solid #f43f5e;
+  animation: emergencyBorderPulse 0.42s ease-in-out infinite alternate;
+}
+
+@keyframes emergencyBorderPulse {
+  0% { opacity: 0.55; box-shadow: inset 0 0 40px rgba(244, 63, 94, 0.4); }
+  100% { opacity: 1; box-shadow: inset 0 0 95px rgba(244, 63, 94, 0.85), inset 0 0 35px rgba(245, 158, 11, 0.6); }
+}
+
+.emergency-punch-in {
+  animation: wariowarePunch 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes wariowarePunch {
+  0% { transform: scale(2.2); opacity: 0; filter: blur(4px); }
+  70% { transform: scale(0.95); opacity: 1; filter: blur(0); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.emergency-hazard-header {
+  background:
+    repeating-linear-gradient(-45deg, rgba(244, 63, 94, 0.16), rgba(244, 63, 94, 0.16) 10px, transparent 10px, transparent 20px),
+    linear-gradient(90deg, #18181b 0%, #27272a 50%, #18181b 100%);
+}
+
+.cryo-pipe {
+  background: linear-gradient(180deg, #52525b 0%, #27272a 40%, #09090b 70%, #3f3f46 100%);
+  box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.9);
+}
+
+.steam-jet {
+  animation: steamBlast 0.22s infinite alternate ease-in-out;
+}
+
+@keyframes steamBlast {
+  0% { transform: scaleY(0.7) scaleX(0.85); opacity: 0.65; }
+  100% { transform: scaleY(1.3) scaleX(1.15); opacity: 0.95; }
+}
+
+.magnetic-patch-clamped {
+  animation: patchClang 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes patchClang {
+  0% { transform: scale(1.6); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.frost-vignette {
+  box-shadow: inset 0 0 110px 40px rgba(186, 230, 253, 0.8), inset 0 0 50px rgba(255, 255, 255, 0.9);
+  background: radial-gradient(circle, transparent 40%, rgba(224, 242, 254, 0.45) 100%);
+}
+
+/* Micro-juego 3: Meteoritos */
+.tactical-crosshair {
+  cursor: crosshair;
+}
+
+.meteor-pop-anim {
+  animation: meteorPop 0.22s ease-out forwards;
+}
+
+@keyframes meteorPop {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Micro-juego 4: Incendio en Biodomo */
+.flame-flicker {
+  animation: flameFlickerAnim 0.18s infinite alternate ease-in-out;
+  transform-origin: bottom center;
+}
+
+@keyframes flameFlickerAnim {
+  0% { transform: scaleY(0.92) scaleX(1.04) rotate(-1.5deg); }
+  100% { transform: scaleY(1.08) scaleX(0.96) rotate(1.5deg); }
+}
+
+.co2-spray-puff {
+  animation: co2PuffAnim 0.3s ease-out forwards;
+}
+
+@keyframes co2PuffAnim {
+  0% { transform: scale(0.6) translate(0, 0); opacity: 0.85; }
+  100% { transform: scale(1.8) translate(var(--tx, 0), var(--ty, 0)); opacity: 0; }
+}
+
+/* Efectos visuales de desastre 3 y 4 */
+.smoke-disaster-vignette {
+  background: radial-gradient(circle at center, rgba(15, 15, 18, 0.45) 0%, rgba(10, 10, 12, 0.88) 75%, rgba(0, 0, 0, 0.98) 100%);
+  animation: smokeRise 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes smokeRise {
+  0% { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0.96; transform: scale(1.02); }
+}
+
+.thermal-alarm-pulse {
+  animation: thermalAlarmBlink 0.32s infinite alternate ease-in-out;
+}
+
+@keyframes thermalAlarmBlink {
+  0% { opacity: 0.35; }
+  100% { opacity: 0.9; box-shadow: inset 0 0 85px rgba(225, 29, 72, 0.75); }
+}
+
+/* =========================================================================
+   MANUAL: LIBRO / CARPETA AEROESPACIAL NARANJA FÍSICA EN EL ESCRITORIO
+   ========================================================================= */
+.manual-physical-book {
+  position: absolute;
+  left: 25px;
+  top: 35px;
+  width: 165px;
+  z-index: 30;
+}
+
+.manual-physical-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(234, 76, 36, 0.45);
+}
+
+/* =========================================================================
+   CÁMARAS DE ENERGÍA DE LA NAVE LUNAR STARSHIP HLS Y VUELO DE CÁPSULAS
+   ========================================================================= */
+.flying-capsule-anim {
+  position: fixed;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  z-index: 9999;
+  pointer-events: none;
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.42s ease;
+  transform: translate(0, 0) scale(1);
+}
+
+.flying-capsule-food {
+  background: #10b981;
+  box-shadow: 0 0 16px #34d399, 0 0 32px #10b981;
+  border: 2px solid #a7f3d0;
+}
+.flying-capsule-pwr {
+  background: #f59e0b;
+  box-shadow: 0 0 16px #fbbf24, 0 0 32px #f59e0b;
+  border: 2px solid #fde68a;
+}
+.flying-capsule-o2 {
+  background: #06b6d4;
+  box-shadow: 0 0 16px #22d3ee, 0 0 32px #06b6d4;
+  border: 2px solid #cffafe;
+}
+.flying-capsule-rad {
+  background: #a855f7;
+  box-shadow: 0 0 16px #c084fc, 0 0 32px #a855f7;
+  border: 2px solid #f3e8ff;
+}
+
+.chamber-card {
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.85);
+}
+
+.chamber-ripple-pulse {
+  animation: chamberRipple 0.38s ease-out;
+}
+
+@keyframes chamberRipple {
+  0% { transform: scale(1); filter: brightness(1.7); }
+  50% { transform: scale(1.06); filter: brightness(2.2); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.chamber-module-chip {
+  height: 8px;
+  border-radius: 2px;
+  width: 100%;
+  transition: all 0.25s ease;
+}
+
+.chip-food {
+  background: #34d399;
+  box-shadow: 0 0 6px #10b981;
+  border: 1px solid #a7f3d0;
+}
+.chip-pwr {
+  background: #fbbf24;
+  box-shadow: 0 0 6px #f59e0b;
+  border: 1px solid #fde68a;
+}
+.chip-o2 {
+  background: #22d3ee;
+  box-shadow: 0 0 6px #06b6d4;
+  border: 1px solid #cffafe;
+}
+.chip-rad {
+  background: #c084fc;
+  box-shadow: 0 0 6px #9333ea;
+  border: 1px solid #f3e8ff;
+}
+
+.solar-wing-glow {
+  animation: solarPulse 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes solarPulse {
+  0% { opacity: 0.75; }
+  100% { opacity: 1; }
+}
+
+#hangar-capacity-counter-big {
+  font-family: 'Redaction 35', sans-serif !important;
+  letter-spacing: 0.05em;
+}
+
+#crate-secret-impact {
+  transition: border-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
+}
+
+#dossier-uv-tradeoff {
+  transition: color 0.3s ease;
+}
+
+/* ==========================================================================
+   TELEMETRÍA EN VIVO OFICIAL DE LA NASA (DONKI & NEOWS)
+   ========================================================================== */
+#nasa-telemetry-btn {
+  transition: all 0.25s ease;
+}
+
+#nasa-telemetry-btn:hover {
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.45);
+  border-color: rgba(34, 211, 238, 0.8);
+}
+
+#nasa-telemetry-modal {
+  animation: fadeInNasaModal 0.22s ease-out;
+}
+
+#donki-climate-badge {
+  transition: all 0.3s ease;
+}
+
+
+@keyframes fadeInNasaModal {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   MONITORES GRÁFICOS ANIMADOS DE ALTO IMPACTO (DONKI & NEOWS)
+   ========================================================================== */
+
+/* 1. VISUALIZADOR SVG DEL SOL Y LA MAGNETÓSFERA LUNAR (DONKI) */
+@keyframes solarCoronaPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.65;
+  }
+}
+
+@keyframes solarCoronaOuterPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.18;
+  }
+  50% {
+    transform: scale(1.22);
+    opacity: 0.38;
+  }
+}
+
+.solar-corona {
+  transform-origin: 55px 72px;
+  animation: solarCoronaPulse 2.8s ease-in-out infinite;
+}
+
+.solar-corona-outer {
+  transform-origin: 55px 72px;
+  animation: solarCoronaOuterPulse 3.8s ease-in-out infinite;
+}
+
+@keyframes solarWindStream {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.95;
+  }
+  80% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(52px);
+    opacity: 0;
+  }
+}
+
+.solar-particle {
+  animation: solarWindStream 2.2s linear infinite;
+}
+.solar-particle.sp-1 { animation-delay: 0s; }
+.solar-particle.sp-2 { animation-delay: 0.35s; }
+.solar-particle.sp-3 { animation-delay: 0.75s; }
+.solar-particle.sp-4 { animation-delay: 1.1s; }
+.solar-particle.sp-5 { animation-delay: 1.5s; }
+.solar-particle.sp-6 { animation-delay: 1.85s; }
+
+@keyframes lunarShieldGlow {
+  0%, 100% {
+    stroke-opacity: 0.75;
+  }
+  50% {
+    stroke-opacity: 1;
+  }
+}
+
+.lunar-shield-arc {
+  animation: lunarShieldGlow 2.4s ease-in-out infinite alternate;
+}
+
+/* Reactividad a la Clase Solar (C, M, X) */
+#solar-magnetosphere-svg[data-solar-class="C"] .solar-core {
+  fill: url(#sunGradC);
+}
+#solar-magnetosphere-svg[data-solar-class="C"] .solar-corona,
+#solar-magnetosphere-svg[data-solar-class="C"] .solar-corona-outer {
+  fill: #eab308;
+}
+#solar-magnetosphere-svg[data-solar-class="C"] .solar-particle,
+#solar-magnetosphere-svg[data-solar-class="C"] .solar-particle-wide {
+  fill: #fde047;
+}
+
+#solar-magnetosphere-svg[data-solar-class="M"] .solar-core {
+  fill: url(#sunGradM);
+}
+#solar-magnetosphere-svg[data-solar-class="M"] .solar-corona,
+#solar-magnetosphere-svg[data-solar-class="M"] .solar-corona-outer {
+  fill: #f97316;
+}
+#solar-magnetosphere-svg[data-solar-class="M"] .solar-particle,
+#solar-magnetosphere-svg[data-solar-class="M"] .solar-particle-wide {
+  fill: #fb923c;
+}
+
+#solar-magnetosphere-svg[data-solar-class="X"] .solar-core {
+  fill: url(#sunGradX);
+}
+#solar-magnetosphere-svg[data-solar-class="X"] .solar-corona,
+#solar-magnetosphere-svg[data-solar-class="X"] .solar-corona-outer {
+  fill: #ef4444;
+}
+#solar-magnetosphere-svg[data-solar-class="X"] .solar-particle,
+#solar-magnetosphere-svg[data-solar-class="X"] .solar-particle-wide {
+  fill: #f87171;
+}
+
+@keyframes solarWindStreamWidescreen {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.95;
+  }
+  80% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(180px);
+    opacity: 0;
+  }
+}
+
+.solar-particle-wide {
+  animation: solarWindStreamWidescreen 2.4s linear infinite;
+}
+.solar-particle-wide.sp-1 { animation-delay: 0s; }
+.solar-particle-wide.sp-2 { animation-delay: 0.35s; }
+.solar-particle-wide.sp-3 { animation-delay: 0.75s; }
+.solar-particle-wide.sp-4 { animation-delay: 1.1s; }
+.solar-particle-wide.sp-5 { animation-delay: 1.5s; }
+.solar-particle-wide.sp-6 { animation-delay: 1.85s; }
+.solar-particle-wide.sp-7 { animation-delay: 0.55s; }
+.solar-particle-wide.sp-8 { animation-delay: 1.35s; }
+
+/* 2. RADAR ORBITAL ANIMADO (NEOWS) */
+@keyframes orbitalRadarSweepSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbital-radar-sweep {
+  transform-origin: 55px 55px;
+  animation: orbitalRadarSweepSpin 4s linear infinite;
+  will-change: transform;
+}
+
+.orbital-radar-sweep-widescreen {
+  transform-origin: 390px 72px;
+  animation: orbitalRadarSweepSpin 4s linear infinite;
+  will-change: transform;
+}
+
+@keyframes neoAsteroidPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.22);
+  }
+}
+
+.neo-asteroid-marker {
+  transform-origin: 46px 33px;
+  animation: neoAsteroidPulse 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.neo-asteroid-marker-widescreen {
+  transform-origin: 451px 52px;
+  animation: neoAsteroidPulse 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Frentes de onda / Shockwaves CME */
+@keyframes shockwavePulse {
+  0%, 100% {
+    opacity: 0.4;
+    stroke-width: 1.5px;
+  }
+  50% {
+    opacity: 0.85;
+    stroke-width: 2.5px;
+  }
+}
+
+.shockwave-1 {
+  animation: shockwavePulse 2.4s ease-in-out infinite;
+}
+.shockwave-2 {
+  animation: shockwavePulse 2.4s ease-in-out infinite 0.4s;
+}
+.shockwave-3 {
+  animation: shockwavePulse 2.4s ease-in-out infinite 0.8s;
+}
+
+.neo-lock-pulse {
+  transform-origin: 451px 52px;
+  animation: neoAsteroidPulse 1.8s ease-in-out infinite;
+}
+
+/* Marco y Bisel del Visor Táctico Ultra-Wide */
+#nasa-donki-card {
+  border: 2px solid #1e293b !important;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9), 0 2px 0 rgba(255, 255, 255, 0.08) !important;
+  background: radial-gradient(circle at 20% 50%, rgba(217, 119, 6, 0.14), rgba(2, 6, 23, 0.98) 55%) !important;
+}
+
+.visor-tactical-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 25;
+}
+
+/* 2 Módulos de Consola de Instrumentación Industrial */
+.donki-instrument-module {
+  border: 1.5px solid #d97706;
+  background: linear-gradient(180deg, #181209 0%, #0b0905 100%);
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: inset 0 1px 1px rgba(251, 191, 36, 0.15), 0 4px 12px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.neows-instrument-module {
+  border: 1.5px solid #0284c7;
+  background: linear-gradient(180deg, #071521 0%, #040b12 100%);
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: inset 0 1px 1px rgba(56, 189, 248, 0.15), 0 4px 12px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.module-corner-screw {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #94a3b8 0%, #334155 70%, #0f172a 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+.lcd-sunken-screen {
+  background: radial-gradient(circle at 50% 50%, #050b14 0%, #020408 100%);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.95), inset 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.donki-led-bar {
+  display: inline-block;
+  width: 4px;
+  height: 8px;
+  border-radius: 1px;
+  background: #1e293b;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
+  transition: all 0.25s ease;
+}
+
+.donki-led-bar.active {
+  box-shadow: 0 0 4px currentColor;
+}
+.donki-led-bar.bar-c.active,
+.donki-led-bar.bar-1.active,
+.donki-led-bar.bar-2.active {
+  background: #10b981;
+  color: #10b981;
+}
+.donki-led-bar.bar-m.active,
+.donki-led-bar.bar-3.active,
+.donki-led-bar.bar-4.active {
+  background: #f59e0b;
+  color: #f59e0b;
+}
+.donki-led-bar.bar-x.active,
+.donki-led-bar.bar-5.active,
+.donki-led-bar.bar-6.active {
+  background: #ef4444;
+  color: #ef4444;
+}
+
+/* 3. BARRA MORADA UV COMPACTA EN 1 SOLA LÍNEA */
+#dossier-uv-tradeoff {
+  white-space: nowrap !important;
+  word-break: normal !important;
+  display: inline-block !important;
+}
+
+.draggable-item {
+  will-change: transform;
+  touch-action: none;
+}
+
+/* =========================================================================
+   16. BOTÓN ROJO INDUSTRIAL DE IGNICIÓN Y LANZAMIENTO (BIG RED BUTTON)
+   ========================================================================= */
+
+.big-red-button-housing {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #3f3f46 0%, #1f2937 60%, #09090b 100%);
+  border: 4px solid #52525b;
+  box-shadow: 
+    0 10px 24px rgba(0, 0, 0, 0.85),
+    inset 0 2px 5px rgba(255, 255, 255, 0.25),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+/* Franja perimetral de precaución industrial sutil */
+.big-red-button-housing::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(245, 158, 11, 0.55);
+  pointer-events: none;
+}
+
+.big-red-launch-button {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 2px solid #ff7b92;
+  background: linear-gradient(180deg, #ff3b5c 0%, #c8102e 100%);
+  box-shadow: 0 8px 0 #6e0617, 0 0 25px rgba(255, 59, 92, 0.6);
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.12s cubic-bezier(0.2, 0, 0, 1);
+  user-select: none;
+}
+
+.big-red-launch-button:hover {
+  transform: translateY(2px);
+  box-shadow: 0 6px 0 #6e0617, 0 0 32px rgba(255, 59, 92, 0.85);
+}
+
+.big-red-launch-button:active,
+.big-red-launch-button.btn-pressed {
+  transform: translateY(5px) !important;
+  box-shadow: 0 3px 0 #6e0617, 0 0 18px rgba(255, 59, 92, 0.5) !important;
+}
+
+.big-red-launch-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+
+/* =========================================================================
+   17. PANTALLA DE CARGA DE LANZAMIENTO ("CARGANDO..." / "LOADING...")
+   ========================================================================= */
+
+#launch-cinematic-overlay {
+  background-color: #05070d !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9500 !important;
+}
+
+.launch-loading-title {
+  font-family: 'Redaction 35', 'Courier New', monospace, serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff !important;
+  font-size: 64px;
+  letter-spacing: 0.12em;
+  margin-right: -0.12em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  text-shadow:
+    0 0 25px rgba(248, 250, 252, 0.85),
+    0 0 60px rgba(226, 232, 240, 0.5),
+    0 4px 15px rgba(0, 0, 0, 0.95);
+}
+
+.wave-letter {
+  display: inline-block;
+  will-change: transform;
+  animation: wormBounce 0.9s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.07s);
+}
+
+@keyframes wormBounce {
+  0%, 60%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  30% {
+    transform: translate3d(0, -22px, 0);
+  }
+}
+
+/* =========================================================================
+   18. BOTÓN DE AJUSTES Y MODAL DE CONFIGURACIÓN
+   ========================================================================= */
+
+.gunmetal-settings-btn {
+  background: radial-gradient(circle at 35% 35%, #3f3f46 0%, #18181b 70%, #09090b 100%);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.gunmetal-settings-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.gunmetal-settings-btn:active {
+  transform: translateY(1px) scale(0.96);
+}
+
+/* Estilo táctil del slider de probabilidad */
+#settings-minigame-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #27272a;
+  height: 8px;
+  border-radius: 9999px;
+  border: 1px solid #3f3f46;
+  outline: none;
+}
+
+#settings-minigame-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #67e8f9 0%, #06b6d4 60%, #0891b2 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.8), 0 2px 5px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#settings-minigame-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 1), 0 2px 7px rgba(0, 0, 0, 0.7);
+}
+
+#settings-minigame-slider::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+}
+
+#settings-minigame-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #67e8f9 0%, #06b6d4 60%, #0891b2 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.8), 0 2px 5px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   LCD MARQUEE TICKER (CAR STEREO STYLE, 100% GPU)
+   ========================================================================== */
+.lcd-ticker-container {
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  position: relative !important;
+  width: 100% !important;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+}
+
+.lcd-ticker-track {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  will-change: transform;
+  animation: lcdMarquee 11s linear infinite;
+}
+
+.lcd-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+.lcd-ticker-track.ticker-fast {
+  animation-duration: 7s;
+}
+
+.lcd-ticker-track.ticker-slow {
+  animation-duration: 16s;
+}
+
+@keyframes lcdMarquee {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+
+
+
+
+

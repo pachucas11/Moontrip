@@ -982,6 +982,7 @@
   }
 
   const sfx = new SoundFX();
+  window.sfx = sfx;
 
   // =======================================================================
   // SERVICIO DE CONEXIÓN EN VIVO A API.NASA.GOV (NASA DONKI & NASA NEOWS)
@@ -4478,29 +4479,49 @@
     }
   }
 
-  function transitionToNextCase(callback) {
-    if (crateScanTimer) {
-      clearTimeout(crateScanTimer);
-      crateScanTimer = null;
-    }
-    clearTimeout(emergencyScheduledTimer);
-    emergencyScheduledTimer = null;
-    closeEmergencyModal();
-    if (state.isTransitioning) return;
-    state.isTransitioning = true;
-    nextShiftBtn.classList.add('hidden');
-    sfx.stopScannerAudio();
-    sfx.playGrab();
+      function transitionSplashToDifficulty() {
+    if (splashTransitioned) return;
+    splashTransitioned = true;
+    if (splashTimer) { clearTimeout(splashTimer); splashTimer = null; }
 
-    dossierEl.classList.add('desk-slide-transition', 'slide-out-dossier');
-    crateEl.classList.add('desk-slide-transition', 'slide-out-crate');
+    const titleScreen = document.getElementById('title-screen');
+    const diffScreen = document.getElementById('difficulty-screen');
 
+    const irADificultad = () => {
+      refreshTitleScreenSaveBanner();
+      if (diffScreen) {
+        diffScreen.classList.remove('hidden');
+        diffScreen.style.display = 'flex';
+        diffScreen.style.opacity = '1';
+        diffScreen.style.pointerEvents = 'auto';
+      }
+    };
+
+    const lanzarIntro = () => {
+      try {
+        if (typeof window.injectStoryIntro === 'function') window.injectStoryIntro();
+        if (typeof window.playStoryIntro === 'function') {
+          window.playStoryIntro(irADificultad);
+        } else {
+          irADificultad();
+        }
+      } catch (err) {
+        console.error('Error en la cinemática:', err);
+        irADificultad();
+      }
+    };
+
+    if (!titleScreen) { lanzarIntro(); return; }
+
+    titleScreen.style.transition = 'opacity 0.4s ease-out';
+    titleScreen.style.opacity = '0';
     setTimeout(() => {
-      state.isTransitioning = false;
-      callback();
-    }, 330);
+      titleScreen.classList.add('hidden');
+      titleScreen.style.display = 'none';
+      titleScreen.style.pointerEvents = 'none';
+      lanzarIntro();
+    }, 400);
   }
-
   function applyZoneScan(targetEl, xrayZone, lensRect, scale) {
     if (!targetEl || !xrayZone || !lensRect) return false;
     const targetRect = targetEl.getBoundingClientRect();
@@ -5296,7 +5317,39 @@
       }
     });
   }
+  function transitionToNextCase(callback) {
+    if (crateScanTimer) {
+      clearTimeout(crateScanTimer);
+      crateScanTimer = null;
+    }
+    clearTimeout(emergencyScheduledTimer);
+    emergencyScheduledTimer = null;
+    closeEmergencyModal();
+    if (state.isTransitioning) return;
+    state.isTransitioning = true;
+    
+    const nextBtn = document.getElementById('next-case-btn') || document.getElementById('next-shift-btn') || nextShiftBtn;
+    if (nextBtn) {
+      nextBtn.classList.add('hidden');
+      nextBtn.style.display = 'none';
+      nextBtn.style.pointerEvents = 'none';
+    }
+    
+    sfx.stopScannerAudio();
+    sfx.playGrab();
 
+    if (dossierEl) {
+      dossierEl.classList.add('desk-slide-transition', 'slide-out-dossier');
+    }
+    if (crateEl) {
+      crateEl.classList.add('desk-slide-transition', 'slide-out-crate');
+    }
+
+    setTimeout(() => {
+      state.isTransitioning = false;
+      callback();
+    }, 330);
+  }
   const handleNextShiftClick = () => {
     if (!caseDecided) return;
 
@@ -5442,42 +5495,6 @@
       transitionSplashToDifficulty();
     }, 2400);
   }
-
-  function transitionSplashToDifficulty() {
-    if (splashTransitioned) return;
-    splashTransitioned = true;
-    if (splashTimer) {
-      clearTimeout(splashTimer);
-      splashTimer = null;
-    }
-    const titleScreen = document.getElementById('title-screen');
-    const diffScreen = document.getElementById('difficulty-screen');
-    if (titleScreen) {
-      titleScreen.style.transition = 'opacity 0.4s ease-out';
-      titleScreen.style.opacity = '0';
-      setTimeout(() => {
-        titleScreen.classList.add('hidden');
-        titleScreen.style.display = 'none';
-        titleScreen.style.pointerEvents = 'none';
-        refreshTitleScreenSaveBanner();
-        if (diffScreen) {
-          diffScreen.classList.remove('hidden');
-          diffScreen.style.display = 'flex';
-          diffScreen.style.opacity = '1';
-          diffScreen.style.pointerEvents = 'auto';
-        }
-      }, 400);
-    } else {
-      refreshTitleScreenSaveBanner();
-      if (diffScreen) {
-        diffScreen.classList.remove('hidden');
-        diffScreen.style.display = 'flex';
-        diffScreen.style.opacity = '1';
-        diffScreen.style.pointerEvents = 'auto';
-      }
-    }
-  }
-
   // Permitir clic o toque sobre la pantalla "MOON" para saltar de inmediato y desbloquear audio
   if (titleScreenModal) {
     titleScreenModal.addEventListener('click', () => {

@@ -3248,6 +3248,45 @@
         Agua: <span id="bio-water-val">500</span> L
       </div>
     </div>
+    <!--[cite: 2] INDEX / HTML — CÁMARA DE ESCUDOS / BOBINAS MAGNÉTICAS -->
+<div id="shield-chamber-container" class="cctv-room-container">
+  <!-- Tarjeta de Recurso: Escudo / Radiación[cite: 2] -->
+  <div id="res-card-rad" class="resource-card">
+    <div class="flex justify-between items-center">
+      <span class="text-xs font-bold text-purple-400">ESCUDO // SHIELD</span>
+      <span id="res-val-rad" class="text-sm font-mono font-black text-purple-200">20%</span>
+    </div>
+    <div class="w-full bg-zinc-800 h-2 rounded-full mt-1 overflow-hidden">
+      <div id="res-bar-rad" class="bg-purple-500 h-full transition-all duration-300" style="width: 20%;"></div>
+    </div>
+    <div id="res-eng-rad" class="text-[9px] font-mono text-zinc-400 mt-0.5">Filtrado: 20 mSv (STD-3001: 50 mSv)[cite: 2]</div>
+    <span id="impact-dot-rad" class="impact-dot"></span>
+    <span id="res-arrow-rad" class="res-delta-arrow hidden text-xs font-black"></span>
+  </div>
+
+  <!-- Vista CCTV: Cámara de Escudos / Núcleo (renderReactorScene)[cite: 2] -->
+  <div class="cctv-scene" data-state="optimal">
+    <svg viewBox="0 0 800 380" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="reactorWall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0e1118"/>
+          <stop offset="50%" stop-color="#080a10"/>
+          <stop offset="100%" stop-color="#030406"/>
+        </linearGradient>
+        <linearGradient id="titaniumRing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#334155"/>
+          <stop offset="25%" stop-color="#64748b"/>
+          <stop offset="50%" stop-color="#cbd5e1"/>
+          <stop offset="75%" stop-color="#475569"/>
+          <stop offset="100%" stop-color="#1e293b"/>
+        </linearGradient>
+      </defs>
+      <rect width="800" height="380" fill="url(#reactorWall)"/>
+      <text x="400" y="26" fill="#475569" font-family="monospace" font-size="7.5" font-weight="900" text-anchor="middle" letter-spacing="2">SHIELD COIL & REACTOR BAY // MAGNETIC DEFENSE & KILOPOWER[cite: 2]</text>
+    </svg>
+    <div class="cctv-badge cctv-badge-blue">[OK] MAGNETIC SHIELD COILS ACTIVE // 100% INTEGRITY[cite: 2]</div>
+  </div>
+</div>
 
     <!-- 3 Macetas Grandes -->
     <div class="grid grid-cols-3 gap-4 my-2 flex-1">
@@ -3617,8 +3656,9 @@
         lfoGain.connect(osc.frequency);
         lfo.start();
       });
+      
     }
-
+    
     // Desbloquear al primer clic
     document.addEventListener('click', playMyMusic, { once: true });
   </script>

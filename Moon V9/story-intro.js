@@ -148,7 +148,7 @@ window.playStoryIntro = function (onComplete) {
 
   applyStoryLanguage(getStoryLang());
 
-  // FORZAR VISIBILIDAD (Esto soluciona el problema de la pantalla negra)
+  // FORZAR VISIBILIDAD
   overlay.style.display = 'flex';
   overlay.style.opacity = '1';
   overlay.style.pointerEvents = 'auto';
@@ -165,10 +165,59 @@ window.playStoryIntro = function (onComplete) {
 
   const lines = ['s-line-1', 's-line-2', 's-line-3', 's-line-4', 's-line-5'].map(id => document.getElementById(id));
 
+  // ---------------------------------------------------------------------
+  // LÓGICA DE SALTO (SKIP)
+  // ---------------------------------------------------------------------
+  let timers = [];
+  let isCompleted = false;
+
+  const cleanupAndFinish = () => {
+    if (isCompleted) return;
+    isCompleted = true;
+
+    // Limpiar todos los temporizadores pendientes
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+
+    // Remover listeners para evitar fuga de memoria
+    overlay.removeEventListener('click', handleSkipClick);
+    window.removeEventListener('keydown', handleSkipKey);
+
+    // Ocultar overlay
+    content.style.opacity = '0';
+    content.style.transform = 'scale(1.1)';
+    
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      if (typeof onComplete === 'function') {
+        try { onComplete(); } catch (e) {}
+      }
+    }, 300); // Transición rápida al saltar
+  };
+
+  const handleSkipClick = (e) => {
+    // Si se hace clic en el botón de idioma, no saltar la intro
+    if (e.target.closest('#story-lang-toggle')) return;
+    cleanupAndFinish();
+  };
+
+  const handleSkipKey = (e) => {
+    // Teclas permitidas para saltar: Espacio, Enter, Escape
+    if (['Space', 'Enter', 'Escape'].includes(e.code) || e.key === ' ' || e.key === 'Enter' || e.key === 'Escape') {
+      e.preventDefault();
+      cleanupAndFinish();
+    }
+  };
+
+  // Registrar eventos de teclado y clic
+  overlay.addEventListener('click', handleSkipClick);
+  window.addEventListener('keydown', handleSkipKey);
+  // ---------------------------------------------------------------------
+
   let delay = 1200;
   lines.forEach((line, index) => {
-    setTimeout(() => {
-      if (!line) return;
+    const tId = setTimeout(() => {
+      if (!line || isCompleted) return;
       line.style.opacity = '1';
       line.style.transform = 'translateY(0)';
       try {
@@ -179,17 +228,15 @@ window.playStoryIntro = function (onComplete) {
         }
       } catch (e) {}
     }, delay);
+
+    timers.push(tId);
     delay += (index === 4 ? 3000 : 2200);
   });
 
-  setTimeout(() => {
-    content.style.opacity = '0';
-    content.style.transform = 'scale(1.1)';
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      if (typeof onComplete === 'function') {
-        try { onComplete(); } catch (e) {}
-      }
-    }, 700);
+  // Temporizador para finalización natural si no se salta
+  const finalTimer = setTimeout(() => {
+    cleanupAndFinish();
   }, delay + 1200);
+
+  timers.push(finalTimer);
 };

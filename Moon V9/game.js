@@ -7161,6 +7161,7 @@
       shortTitle: (isEn) => isEn ? 'OXYGEN' : 'OXÍGENO',
       title: (isEn) => isEn ? 'CRYOGENIC OXYGEN PLANT' : 'PLANTA CRIOGÉNICA DE OXÍGENO',
       resName: (isEn) => isEn ? 'OXYGEN' : 'OXÍGENO',
+      interactive: true,   // CAM-04 ahora es el minijuego de electrólisis (renderLifeScene queda solo para la miniatura nocturna)
       render: renderLifeScene
     },
     rad: {
@@ -7207,7 +7208,48 @@
     }).join('');
   }
 
-  const cctv = { open: false, room: 'food', clockTimer: null, sigs: {} };
+  const cctv = { open: false, room: 'food', clockTimer: null, sigs: {}, o2Cleanup: null, o2RewardSol: -1 };
+  const ELECTROLYSIS_REWARD = 10;   // % de oxígeno por ganar (1 vez por Sol). Cámbialo a tu gusto.
+
+  function unmountO2Game() {
+    if (typeof cctv.o2Cleanup === 'function') cctv.o2Cleanup();
+    cctv.o2Cleanup = null;
+    const el = document.getElementById('cctv-room-o2');
+    if (el) el.innerHTML = '';
+  }
+
+  function mountO2Game() {
+    const roomEl = document.getElementById('cctv-room-o2');
+    if (!roomEl) return;
+    unmountO2Game();
+    roomEl.innerHTML = '<div class="el-cctv-wrap"></div>';
+    const wrap = roomEl.firstChild;
+    cctv.o2Cleanup = renderElectrolysisMinigame(wrap, (ok) => {
+      if (!wrap.isConnected || !cctv.open) return;   // se cerró la cámara antes de terminar
+      const isEn = window.GAME_SETTINGS?.lang === 'en';
+      let msg;
+      if (ok) {
+        sfx.playMinigameSuccess();
+        if (cctv.o2RewardSol !== state.sol) {
+          cctv.o2RewardSol = state.sol;
+          state.resources.o2 = Math.min(100, state.resources.o2 + ELECTROLYSIS_REWARD);
+          updateResourceBars();
+          msg = isEn ? `OXYGEN PRODUCED: +${ELECTROLYSIS_REWARD}% OXYGEN` : `OXÍGENO PRODUCIDO: +${ELECTROLYSIS_REWARD}% OXÍGENO`;
+        } else {
+          msg = isEn ? 'OXYGEN PRODUCED (BONUS ALREADY CLAIMED THIS SOL)' : 'OXÍGENO PRODUCIDO (BONO YA COBRADO EN ESTE SOL)';
+        }
+      } else {
+        sfx.playMinigameFail();
+        msg = isEn ? 'OVERHEAT! ELECTROLYZER SHUT DOWN' : '¡SOBRECALENTAMIENTO! ELECTROLIZADOR APAGADO';
+      }
+      const box = document.createElement('div');
+      box.className = 'el-result ' + (ok ? 'ok' : 'bad');
+      box.innerHTML = `<div>${msg}</div><button type="button" class="el-btn">${isEn ? 'RESTART' : 'REINICIAR'}</button>`;
+      box.querySelector('button').addEventListener('click', () => { sfx.playGrab(); mountO2Game(); });
+      wrap.appendChild(box);
+    });
+  }
+
 
   function cctvSignature(key) {
     const isEn = (window.GAME_SETTINGS?.lang === 'en') || (localStorage.getItem('lunar_lang') === 'en');
@@ -7235,7 +7277,14 @@
       }
       if (tabVal) tabVal.textContent = `${val}%`;
 
-      if (roomEl) {
+      if (roomEl && room.interactive) {
+        if (key === cctv.room) {
+          if (force || !cctv.o2Cleanup) mountO2Game();
+        } else if (cctv.o2Cleanup) {
+          unmountO2Game();
+        }
+        roomEl.classList.toggle('hidden', key !== cctv.room);
+      } else if (roomEl) {
         if (room.render) {
           const sig = cctvSignature(key);
           if (force || cctv.sigs[key] !== sig) {
@@ -7287,6 +7336,7 @@
 
   function closeCctv() {
     cctv.open = false;
+    unmountO2Game();
     document.getElementById('cctv-modal').classList.add('hidden');
     if (cctv.clockTimer) {
       clearInterval(cctv.clockTimer);
@@ -8642,6 +8692,138 @@
       isDone = true;
       arena.removeEventListener('pointermove', handleExtinguisherMove);
       arena.removeEventListener('pointerdown', handleExtinguisherMove);
+    };
+  }
+
+  // aqui es
+  
+  function renderElectrolysisMinigame(container, onComplete) {
+    const en = window.GAME_SETTINGS?.lang === 'en';
+    const T = en
+      ? { off:'POWER OFF — FLIP THE SWITCH', low:'LOW VOLTAGE — RAISE IT', ok:'OPTIMAL — ELECTROLYSING', hot:'OVERHEAT! LOWER VOLTAGE!',
+          sw:'POWER', v:'VOLTAGE', cam:'CAM-07 // ELECTROLYSIS', bat:'BATTERY', goal:'GOAL' }
+      : { off:'SIN ENERGÍA — ACTIVA EL INTERRUPTOR', low:'VOLTAJE BAJO — SÚBELO', ok:'ÓPTIMO — ELECTROLIZANDO', hot:'¡SOBRECALENTAMIENTO! ¡BAJA EL VOLTAJE!',
+          sw:'ENERGÍA', v:'VOLTAJE', cam:'CAM-07 // ELECTRÓLISIS', bat:'BATERÍA', goal:'META' };
+    const fx = n => { try { if (typeof sfx !== 'undefined' && sfx[n]) sfx[n](); } catch (_) {} };
+    const NS = 'http://www.w3.org/2000/svg';
+    const Y0 = 48, H = 184;                       // interior de los tubos (y inicial, alto)
+
+    container.innerHTML = `
+    <div class="el-mg">
+      <div class="el-bar"><span class="el-rec">${T.cam}</span><span class="el-status" id="el-st">${T.off}</span></div>
+      <svg class="el-scene" viewBox="0 0 640 360" preserveAspectRatio="xMidYMid meet">
+        <defs><clipPath id="el-c1"><rect x="130" y="${Y0}" width="44" height="${H}" rx="20"/></clipPath>
+              <clipPath id="el-c2"><rect x="200" y="${Y0}" width="44" height="${H}" rx="20"/></clipPath></defs>
+        <text x="170" y="22">ELECTROLISIS</text>
+        <!-- vaso -->
+        <path d="M100 130 V300 Q100 322 122 322 H278 Q300 322 300 300 V130" fill="none" stroke="#b8d3da" stroke-width="2.5"/>
+        <rect x="102" y="170" width="196" height="150" rx="14" fill="rgba(56,189,248,.16)"/>
+        <!-- tubos -->
+        <g clip-path="url(#el-c1)"><rect x="130" y="${Y0}" width="44" height="${H}" fill="rgba(56,189,248,.18)"/>
+          <rect id="el-g1" x="130" y="${Y0}" width="44" height="0" fill="#5eead4" opacity=".55"/></g>
+        <g clip-path="url(#el-c2)"><rect x="200" y="${Y0}" width="44" height="${H}" fill="rgba(56,189,248,.18)"/>
+          <rect id="el-g2" x="200" y="${Y0}" width="44" height="0" fill="#7dd3fc" opacity=".55"/></g>
+        <rect class="el-tube" x="130" y="${Y0}" width="44" height="${H}" rx="20"/>
+        <rect class="el-tube" x="200" y="${Y0}" width="44" height="${H}" rx="20"/>
+        <line class="el-goal" x1="124" x2="180" y1="${Y0 + H / 2}" y2="${Y0 + H / 2}"/>
+        <line class="el-goal" x1="194" x2="250" y1="${Y0 + H - 2}" y2="${Y0 + H - 2}"/>
+        <text x="126" y="40">O₂ <tspan id="el-p1">0%</tspan></text><text x="196" y="40">H₂ <tspan id="el-p2">0%</tspan></text>
+        <text x="254" y="${Y0 + H / 2 + 4}">${T.goal}</text>
+        <!-- electrodos y cables -->
+        <line x1="152" x2="152" y1="200" y2="300" stroke="#cbd5e1" stroke-width="3"/><line x1="222" x2="222" y1="200" y2="300" stroke="#cbd5e1" stroke-width="3"/>
+        <path class="el-wire" id="el-w1" d="M222 300 V338 H395 V292"/>
+        <path class="el-wire" id="el-w2" d="M152 300 V350 H525 V292"/>
+        <!-- batería -->
+        <rect x="360" y="218" width="200" height="74" rx="8" fill="#14262d" stroke="#8aa4ad" stroke-width="2.5"/>
+        <line x1="460" x2="460" y1="218" y2="292" stroke="#8aa4ad" stroke-width="2"/>
+        <text x="368" y="212">${T.bat}</text>
+        <text x="395" y="262" font-size="30" style="font-size:30px;fill:#7dd3fc">−</text><text x="512" y="264" style="font-size:30px;fill:#5eead4">+</text>
+        <path d="M470 205 Q520 170 560 150" fill="none" stroke="#8aa4ad" stroke-width="2" marker-end="url(#el-ar)"/>
+        <defs><marker id="el-ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#8aa4ad"/></marker></defs>
+        <rect x="500" y="80" width="110" height="64" rx="8" fill="#14262d" stroke="#8aa4ad" stroke-width="2"/>
+        <text x="520" y="106">${T.sw}</text><circle id="el-led" cx="590" cy="100" r="6" fill="#475569"/>
+        <text x="520" y="130" id="el-vtxt">0%</text>
+        <path class="el-spark" id="el-sp" d="M470 140 l12 -26 l-8 0 l14 -30" fill="none" stroke="#fde047" stroke-width="3"/>
+        <g id="el-bub"></g>
+      </svg>
+      <div class="el-heat"><b id="el-ht"></b></div>
+      <div class="el-controls">
+        <button class="el-btn el-sw" id="el-on"><i></i><span>${T.sw}</span></button>
+        <div class="el-gauge"><div class="el-band"></div><div class="el-red"></div><div class="el-fill" id="el-vf"></div><span class="el-gl">${T.v}</span></div>
+        <button class="el-btn" id="el-dn" aria-label="-">−</button><button class="el-btn" id="el-up" aria-label="+">+</button>
+      </div>
+    </div>`;
+
+    const $ = s => container.querySelector(s);
+    const root = $('.el-mg'), st = $('#el-st'), g1 = $('#el-g1'), g2 = $('#el-g2'), bub = $('#el-bub');
+    const S = { on: false, v: 0.30, o2: 0, h2: 0, heat: 0, tOn: 0, surged: false, done: false, raf: 0, last: 0, bubs: [] };
+    const hs = (t, c) => { st.textContent = t; st.className = 'el-status ' + (c || ''); };
+
+    function setOn(v) {
+      if (S.done) return;
+      S.on = v; $('#el-on').classList.toggle('on', v);
+      $('#el-led').setAttribute('fill', v ? '#5eead4' : '#475569');
+      $('#el-w1').classList.toggle('live', v); $('#el-w2').classList.toggle('live', v);
+      fx('playWireConnect');
+    }
+    const onSw = () => setOn(!S.on);
+    const onUp = () => { if (!S.done) { S.v = Math.min(1, S.v + 0.15); fx('playClick'); } };
+    const onDn = () => { if (!S.done) { S.v = Math.max(0, S.v - 0.15); fx('playClick'); } };
+    const bOn = $('#el-on'), bUp = $('#el-up'), bDn = $('#el-dn');
+    bOn.addEventListener('pointerdown', onSw); bUp.addEventListener('pointerdown', onUp); bDn.addEventListener('pointerdown', onDn);
+
+    function spawn(x, color) {
+      if (S.bubs.length > 60) return;
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('r', (1.5 + Math.random() * 2).toFixed(1)); c.setAttribute('fill', color); c.setAttribute('opacity', '.8');
+      bub.appendChild(c);
+      S.bubs.push({ c, x: x + (Math.random() - .5) * 28, y: 205, vy: 50 + Math.random() * 40 });
+    }
+
+    function finish(ok) {
+      if (S.done) return; S.done = true; cancelAnimationFrame(S.raf);
+      if (!ok) { root.classList.add('shake'); fx('playWireBuzz'); }
+      setTimeout(() => onComplete(ok), ok ? 350 : 450);
+    }
+
+    function frame(ts) {
+      if (S.done) return;
+      const dt = Math.min(0.05, (ts - (S.last || ts)) / 1000); S.last = ts;
+      const v = S.v, hot = v > 0.88;
+      if (S.on) {
+        S.tOn += dt;
+        if (!S.surged && S.tOn > 1.5) {                       // chispa de sobrecarga: obliga a usar "−"
+          S.surged = true; S.v = Math.min(1, S.v + 0.30);
+          const sp = $('#el-sp'); sp.classList.add('on'); fx('playWireBuzz');
+        }
+        const rate = 0.55 * S.v;                              // H₂ se produce 2× más rápido que O₂
+        S.h2 = Math.min(1, S.h2 + rate * dt);
+        S.o2 = Math.min(0.5, S.o2 + rate * 0.5 * dt);
+        if (Math.random() < S.v * 0.9) { spawn(152, '#5eead4'); }
+        if (Math.random() < S.v * 0.9) { spawn(222, '#7dd3fc'); }
+      }
+      S.heat = S.on && hot ? S.heat + 0.6 * dt : Math.max(0, S.heat - 0.5 * dt);
+      g1.setAttribute('height', S.o2 * H);
+      g2.setAttribute('height', S.h2 * H);
+      $('#el-p1').textContent = Math.round(S.o2 * 200) + '%'; $('#el-p2').textContent = Math.round(S.h2 * 100) + '%';
+      $('#el-vf').style.width = (S.v * 100) + '%'; $('#el-vtxt').textContent = Math.round(S.v * 100) + '%';
+      $('#el-ht').style.width = (S.heat * 100) + '%';
+      for (let i = S.bubs.length - 1; i >= 0; i--) {
+        const b = S.bubs[i]; b.y -= b.vy * dt;
+        const top = Y0 + (b.x < 190 ? S.o2 : S.h2) * H;
+        if (b.y <= top) { b.c.remove(); S.bubs.splice(i, 1); continue; }
+        b.c.setAttribute('cx', b.x.toFixed(1)); b.c.setAttribute('cy', b.y.toFixed(1));
+      }
+      if (!S.on) hs(T.off); else if (hot) hs(T.hot, 'bad'); else if (S.v < 0.55) hs(T.low, 'warn'); else hs(T.ok);
+      if (S.heat >= 1) return finish(false);
+      if (S.h2 >= 1) { hs('✓ H₂ : O₂ = 2 : 1'); return finish(true); }
+      S.raf = requestAnimationFrame(frame);
+    }
+    S.raf = requestAnimationFrame(frame);
+
+    return () => {                                            // cleanup (lo llama resolveEmergency)
+      S.done = true; cancelAnimationFrame(S.raf);
+      bOn.removeEventListener('pointerdown', onSw); bUp.removeEventListener('pointerdown', onUp); bDn.removeEventListener('pointerdown', onDn);
     };
   }
 

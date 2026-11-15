@@ -27,6 +27,57 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/redaction" />
   <link rel="stylesheet" href="styles.css" />
+    <!-- MÚSICA AMBIENTAL ESPACIAL (INDEPENDIENTE Y SEGURA) -->
+  <script>
+    document.addEventListener('click', function initMusic() {
+      // Evitar que se ejecute dos veces
+      if (window.mySpaceMusicStarted) return;
+      window.mySpaceMusicStarted = true;
+
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        // Acorde espacial (La menor)
+        const freqs = [55.00, 110.00, 164.81, 220.00];
+        
+        freqs.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const filter = ctx.createBiquadFilter();
+
+          osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+          osc.frequency.value = freq;
+
+          filter.type = 'lowpass';
+          filter.frequency.value = 400 + (i * 100);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start();
+          
+          // Volumen ambiente (bajo para no molestar)
+          gain.gain.setTargetAtTime(0.08 / (i + 1), ctx.currentTime, 2);
+
+          // Efecto de "respiración espacial"
+          const lfo = ctx.createOscillator();
+          const lfoGain = ctx.createGain();
+          lfo.type = 'sine';
+          lfo.frequency.value = 0.1 + (i * 0.05);
+          lfoGain.gain.value = 2;
+          
+          lfo.connect(lfoGain);
+          lfoGain.connect(osc.frequency);
+          lfo.start();
+        });
+      } catch (e) {
+        console.log("Audio no soportado o bloqueado.");
+      }
+    }, { once: true });
+  </script>
 </head>
 
 <body
@@ -89,7 +140,7 @@
 
       <!-- Contenido Central "MOON" (position: relative; z-index: 20) -->
       <div class="relative z-20 flex flex-col items-center justify-center pointer-events-none text-center px-4">
-        <h1 class="moon-title" style="opacity: 1; color: #ffffff; z-index: 20;">MOON</h1>
+        <h1 class="moon-title" style="opacity: 1; color: #ffffff; z-index: 20;">Moontrip</h1>
       </div>
     </div>
 
@@ -1298,7 +1349,11 @@
           </div>
         </div>
       </div>
-
+              <!-- Botón de Música (Al lado del de Reiniciar) -->
+        <button id="music-toggle-btn" type="button" 
+                class="bg-zinc-950 hover:bg-zinc-800 text-cyan-300 border border-zinc-700 hover:border-cyan-500/60 px-3 py-2 rounded-lg text-[10px] font-black tracking-wider uppercase cursor-pointer transition-colors leading-tight shadow-md ml-2">
+          🔇 Música: OFF
+        </button>
       <!-- Botón REINICIAR MISIÓN a la derecha -->
       <div class="shrink-0 flex items-center">
         <button id="abort-reset-btn" data-i18n="restartMissionBtn" title="Borrar autoguardado y reiniciar misión"
@@ -3509,8 +3564,68 @@
     </div>
   </div>
 </div>
+  <!-- Reproductor de Música de Fondo (Oculto) -->
+  <audio id="bg-music" loop>
+    <source src="musica-espacial.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+    <!-- REPRODUCTOR DE MÚSICA DIRECTO (SIN ARCHIVOS EXTERNOS) -->
+  <script>
+    let myAudioCtx = null;
+    let myMusicPlaying = false;
+
+    function playMyMusic() {
+      if (!myAudioCtx) {
+        myAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (myAudioCtx.state === 'suspended') {
+        myAudioCtx.resume();
+      }
+
+      if (myMusicPlaying) return;
+      myMusicPlaying = true;
+
+      // Acorde espacial
+      const freqs = [55.00, 110.00, 164.81, 220.00];
+      
+      freqs.forEach((freq, i) => {
+        const osc = myAudioCtx.createOscillator();
+        const gain = myAudioCtx.createGain();
+        const filter = myAudioCtx.createBiquadFilter();
+
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.value = freq;
+
+        filter.type = 'lowpass';
+        filter.frequency.value = 400 + (i * 100);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(myAudioCtx.destination);
+        osc.start();
+        
+        // Volumen claro
+        gain.gain.setTargetAtTime(0.2 / (i + 1), myAudioCtx.currentTime, 2);
+
+        const lfo = myAudioCtx.createOscillator();
+        const lfoGain = myAudioCtx.createGain();
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.1 + (i * 0.05);
+        lfoGain.gain.value = 3;
+        
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        lfo.start();
+      });
+    }
+
+    // Desbloquear al primer clic
+    document.addEventListener('click', playMyMusic, { once: true });
+  </script>
+
+  <!-- Tus scripts normales -->
   <script src="story-intro.js"></script>
+  <script src="music.js"></script>
   <script src="game.js"></script>
 </body>
-
 </html>
